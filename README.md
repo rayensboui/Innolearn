@@ -15,42 +15,7 @@ This is a comprehensive educational platform implemented with **Symfony** using 
 🔐 **Secure Authentication**: Symfony security with role-based access control
 
 ## 📁 Project Structure
-innolearn/
-├── src/
-│ ├── Controller/
-│ │ ├── UserController.php # 👥 User management logic
-│ │ ├── EventController.php # 📅 Event handling
-│ │ ├── SubscriptionController.php # 💳 Subscription logic
-│ │ ├── OpportunityController.php # 💼 Business opportunities
-│ │ ├── CourseController.php # 📚 Course operations
-│ │ └── ProjectController.php # 🏢 Project management
-│ │
-│ ├── Entity/ # 🧩 Data models
-│ │ ├── User.php # User entity
-│ │ ├── Event.php # Event entity
-│ │ ├── Subscription.php # Subscription entity
-│ │ ├── Opportunity.php # Opportunity entity
-│ │ ├── Course.php # Course entity
-│ │ └── Project.php # Project entity
-│ │
-│ └── Repository/ # Data access layer
-│
-├── templates/ # 🎨 Views (Twig templates)
-│ ├── user/ # User-related views
-│ ├── event/ # Event-related views
-│ ├── subscription/ # Subscription views
-│ ├── opportunity/ # Opportunity views
-│ ├── course/ # Course views
-│ ├── project/ # Project views
-│ └── dashboard/ # Dashboard views
-│
-├── public/ # 🌐 Public assets
-│ ├── css/ # Stylesheets
-│ ├── js/ # JavaScript files
-│ └── assets/ # Images, fonts, etc.
-│
-├── config/ # ⚙️ Configuration files
-└── migrations/ # 📊 Database migrations
+
 
 ## 🔧 Implementation Details
 
