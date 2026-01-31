@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard - InnoLearn{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slateBlue flex">
+    <!-- Sidebar avec navbar -->
+    <aside class="w-64 bg-navy border-r border-white/10 hidden md:block">
+        <div class="p-6 flex items-center gap-3">
+            <img src="{{ asset('images/logo.png') }}" alt="InnoLearn" class="w-10">
+            <h2 class="text-2xl font-bold text-white">InnoAdmin</h2>
+        </div>
+        <nav class="mt-6 px-4 space-y-2">
+            <a href="#" class="block px-4 py-3 rounded-lg bg-indigo-600 text-white font-medium">Dashboard</a>
+            <a href="{{ path('app_backend_project_index') }}" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Projets</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Événements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Abonnements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Utilisateurs</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Cours</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Opportunités</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Settings</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-white">Dashboard Overview</h1>
+            <a href="{{ path('app_home') }}" class="text-indigo-400 hover:text-white pb-2 pl-4">Back to Site</a>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-navy border border-white/10 p-6 rounded-2xl">
+                <div class="text-slate-400 text-sm mb-2">Total Students</div>
+                <div class="text-4xl font-bold text-white">1,240</div>
+            </div>
+            <div class="bg-navy border border-white/10 p-6 rounded-2xl">
+                <div class="text-slate-400 text-sm mb-2">Active Courses</div>
+                <div class="text-4xl font-bold text-white">45</div>
+            </div>
+            <div class="bg-navy border border-white/10 p-6 rounded-2xl">
+                <div class="text-slate-400 text-sm mb-2">Revenue (Mo)</div>
+                <div class="text-4xl font-bold text-emerald-400">$12.5k</div>
+            </div>
+        </div>
+
+        <div class="bg-navy border border-white/10 p-8 rounded-2xl h-96 flex items-center justify-center">
+            <p class="text-slate-500">Analytics Data Placeholder</p>
+        </div>
+    </main>
+</div>
+{% endblock %}

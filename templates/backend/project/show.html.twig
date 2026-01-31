@@ -1,0 +1,304 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Projet - {{ project.title }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slateBlue flex">
+    <!-- Sidebar identique à votre dashboard -->
+    <aside class="w-64 bg-navy border-r border-white/10 hidden md:block">
+        <div class="p-6 flex items-center gap-3">
+            <img src="{{ asset('images/logo.png') }}" alt="InnoLearn" class="w-10">
+            <h2 class="text-2xl font-bold text-white">InnoAdmin</h2>
+        </div>
+        <nav class="mt-6 px-4 space-y-2">
+            <a href="{{ path('app_admin_dashboard') }}" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Dashboard</a>
+            <a href="{{ path('app_backend_project_index') }}" class="block px-4 py-3 rounded-lg bg-indigo-600 text-white font-medium">Projets</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Événements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Abonnements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Utilisateurs</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Cours</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Opportunités</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Settings</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-white inline-flex items-center">
+                    <i class="fas fa-eye mr-3 text-blue-400"></i>Détails du Projet
+                </h1>
+                <p class="text-slate-400 mt-2">Consultez toutes les informations concernant ce projet</p>
+            </div>
+            <div class="flex space-x-4">
+                <a href="{{ path('app_backend_project_index') }}" 
+                   class="bg-slate-600 hover:bg-slate-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour
+                </a>
+                <a href="{{ path('app_backend_project_edit', {'id': project.id}) }}" 
+                   class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center">
+                    <i class="fas fa-edit mr-2"></i>Modifier
+                </a>
+            </div>
+        </header>
+
+        <!-- Carte des détails -->
+        <div class="max-w-4xl">
+            <div class="bg-navy border border-white/10 rounded-2xl shadow-lg overflow-hidden">
+                <!-- En-tête de la carte -->
+                <div class="bg-indigo-600 px-8 py-6">
+                    <h2 class="text-xl font-bold text-white inline-flex items-center">
+                        <i class="fas fa-info-circle mr-3"></i>Informations du Projet
+                    </h2>
+                </div>
+                
+                <!-- Corps de la carte -->
+                <div class="p-8">
+                    <div class="space-y-6">
+                        <!-- Titre du projet -->
+                        <div class="border-b border-white/10 pb-6">
+                            <h3 class="text-2xl font-bold text-white mb-2">{{ project.title }}</h3>
+                            <div class="inline-flex items-center mt-2">
+                                {% set status_colors = {
+                                    'draft': 'bg-slate-600',
+                                    'active': 'bg-emerald-600', 
+                                    'completed': 'bg-blue-600',
+                                    'cancelled': 'bg-red-600'
+                                } %}
+                                {% set status_text = {
+                                    'draft': 'Brouillon',
+                                    'active': 'Actif',
+                                    'completed': 'Terminé',
+                                    'cancelled': 'Annulé'
+                                } %}
+                                <span class="{{ status_colors[project.status] ?? 'bg-slate-600' }} text-white px-4 py-2 rounded-full text-sm font-medium inline-flex items-center">
+                                    <i class="fas fa-circle text-xs mr-2"></i>
+                                    {{ status_text[project.status] ?? project.status }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Grid des informations -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Colonne gauche -->
+                            <div class="space-y-6">
+                                <!-- ID -->
+                                <div class="bg-slateBlue/50 border border-white/10 rounded-lg p-5">
+                                    <div class="text-slate-400 text-sm font-medium mb-2">ID</div>
+                                    <div class="text-white text-lg font-mono">#{{ project.id }}</div>
+                                </div>
+
+                                <!-- Dates importantes -->
+                                <div class="bg-slateBlue/50 border border-white/10 rounded-lg p-5">
+                                    <div class="text-slate-400 text-sm font-medium mb-4">Dates</div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="text-slate-300 text-sm mb-1">Date de début</div>
+                                            <div class="text-white font-medium">{{ project.startDate|date('d/m/Y') }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-slate-300 text-sm mb-1">Date de fin</div>
+                                            <div class="text-white font-medium">{{ project.endDate ? project.endDate|date('d/m/Y') : 'Non définie' }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Métadonnées -->
+                                <div class="bg-slateBlue/50 border border-white/10 rounded-lg p-5">
+                                    <div class="text-slate-400 text-sm font-medium mb-4">Métadonnées</div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="text-slate-300 text-sm mb-1">Créé le</div>
+                                            <div class="text-white font-medium">{{ project.createdAt|date('d/m/Y à H:i') }}</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-slate-300 text-sm mb-1">Modifié le</div>
+                                            <div class="text-white font-medium">{{ project.updatedAt ? project.updatedAt|date('d/m/Y à H:i') : 'Jamais modifié' }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Colonne droite -->
+                            <div class="bg-slateBlue/50 border border-white/10 rounded-lg p-5 h-full">
+                                <div class="text-slate-400 text-sm font-medium mb-4">Description</div>
+                                <div class="text-white leading-relaxed">
+                                    {{ project.description|nl2br }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions supplémentaires -->
+                        <div class="pt-6 border-t border-white/10">
+                            <div class="flex justify-between items-center">
+                                <div class="text-slate-400 text-sm">
+                                    <i class="fas fa-history mr-2"></i>
+                                    Dernière mise à jour : {{ project.updatedAt ? project.updatedAt|date('d/m/Y à H:i') : project.createdAt|date('d/m/Y à H:i') }}
+                                </div>
+                                <div class="flex space-x-4">
+                                    <!-- Bouton de suppression -->
+                                    <form method="post" 
+                                          action="{{ path('app_backend_project_delete', {'id': project.id}) }}" 
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');"
+                                          class="inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
+                                        <button type="submit" 
+                                                class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center">
+                                            <i class="fas fa-trash mr-2"></i>Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section des statistiques (optionnelle) -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Statut -->
+            <div class="bg-navy border border-white/10 rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-slate-400 text-sm mb-2">Statut actuel</div>
+                        <div class="text-2xl font-bold text-white">{{ status_text[project.status] ?? project.status }}</div>
+                    </div>
+                    <div class="text-3xl">
+                        {% if project.status == 'active' %}
+                            <i class="fas fa-play-circle text-emerald-400"></i>
+                        {% elseif project.status == 'completed' %}
+                            <i class="fas fa-check-circle text-blue-400"></i>
+                        {% elseif project.status == 'cancelled' %}
+                            <i class="fas fa-times-circle text-red-400"></i>
+                        {% else %}
+                            <i class="fas fa-edit text-slate-400"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Durée -->
+            <div class="bg-navy border border-white/10 rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-slate-400 text-sm mb-2">Durée du projet</div>
+                        <div class="text-2xl font-bold text-white">
+                            {% if project.endDate %}
+                                {% set startDate = project.startDate|date('U') %}
+                                {% set endDate = project.endDate|date('U') %}
+                                {% set diff = endDate - startDate %}
+                                {% set days = (diff / (60 * 60 * 24))|round(0, 'floor') %}
+                                {% if days < 30 %}
+                                    {{ days }} jour{{ days > 1 ? 's' : '' }}
+                                {% elseif days < 365 %}
+                                    {{ (days / 30)|round(0, 'floor') }} mois
+                                {% else %}
+                                    {{ (days / 365)|round(1) }} an{{ (days / 365)|round(1) > 1 ? 's' : '' }}
+                                {% endif %}
+                            {% else %}
+                                En cours
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="text-3xl">
+                        <i class="fas fa-calendar-alt text-indigo-400"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Âge du projet -->
+            <div class="bg-navy border border-white/10 rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-slate-400 text-sm mb-2">Âge du projet</div>
+                        <div class="text-2xl font-bold text-white">
+                            Créé le {{ project.createdAt|date('d/m/Y') }}
+                        </div>
+                    </div>
+                    <div class="text-3xl">
+                        <i class="fas fa-clock text-amber-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Styles supplémentaires -->
+<style>
+/* Style pour les badges de statut */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Animation pour les cartes */
+.bg-slateBlue\/50 {
+    transition: all 0.3s ease;
+}
+
+.bg-slateBlue\/50:hover {
+    background-color: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Style pour les séparateurs */
+.border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style pour le texte de description */
+.leading-relaxed {
+    line-height: 1.75;
+}
+
+/* Style pour les icônes dans les statistiques */
+.text-3xl i {
+    opacity: 0.8;
+}
+</style>
+
+<!-- Script pour les interactions -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animation pour les cartes statistiques
+    const statCards = document.querySelectorAll('.bg-navy.border');
+    statCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.2)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    // Confirmation pour la suppression
+    const deleteForm = document.querySelector('form[action*="delete"]');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+            if (!confirm('Êtes-vous ABSOLUMENT sûr de vouloir supprimer ce projet ? Cette action est irréversible.')) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    // Mettre en évidence la sidebar active
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        if (link.getAttribute('href') && currentPath.includes(link.getAttribute('href'))) {
+            link.classList.add('bg-indigo-600', 'text-white');
+            link.classList.remove('text-slate-400', 'hover:bg-white/5');
+        }
+    });
+});
+</script>
+{% endblock %}

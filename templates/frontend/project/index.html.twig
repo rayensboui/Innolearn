@@ -1,0 +1,190 @@
+{# templates/frontend/project/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Projets - InnoLearn{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .project-card {
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.5) 100%);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(99, 102, 241, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                    0 0 40px rgba(99, 102, 241, 0.1);
+    }
+    
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        display: inline-block;
+    }
+    
+    .detail-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .detail-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="container mx-auto px-4 pt-24 pb-16">
+        <!-- Header -->
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+                Nos <span style="background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Projets</span>
+            </h1>
+            <p class="text-xl text-slate-300 mb-8">
+                Découvrez nos réalisations innovantes
+            </p>
+        </div>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white/5 rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-white mb-2">{{ projects|length }}</div>
+                <div class="text-slate-400">Total</div>
+            </div>
+            <div class="bg-white/5 rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-emerald-400 mb-2">{{ projects|filter(p => p.status == 'active')|length }}</div>
+                <div class="text-slate-400">Actifs</div>
+            </div>
+            <div class="bg-white/5 rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-blue-400 mb-2">{{ projects|filter(p => p.status == 'completed')|length }}</div>
+                <div class="text-slate-400">Terminés</div>
+            </div>
+            <div class="bg-white/5 rounded-xl p-6 text-center">
+                <div class="text-3xl font-bold text-amber-400 mb-2">{{ projects|filter(p => p.status == 'draft')|length }}</div>
+                <div class="text-slate-400">Brouillons</div>
+            </div>
+        </div>
+        
+        <!-- Filtres -->
+        <div class="flex flex-wrap gap-3 justify-center mb-16">
+            <a href="{{ path('app_frontend_project_index') }}" 
+               class="px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-500 transition-colors flex items-center gap-2">
+                Tous ({{ projects|length }})
+            </a>
+            <a href="{{ path('app_frontend_project_index') }}?status=active" 
+               class="px-6 py-3 rounded-xl bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2">
+                Actifs ({{ projects|filter(p => p.status == 'active')|length }})
+            </a>
+            <a href="{{ path('app_frontend_project_index') }}?status=completed" 
+               class="px-6 py-3 rounded-xl bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2">
+                Terminés ({{ projects|filter(p => p.status == 'completed')|length }})
+            </a>
+        </div>
+        
+        <!-- Projets Grid -->
+        {% if projects|length > 0 %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for project in projects %}
+                    <div class="project-card">
+                        <div class="p-6">
+                            <!-- Header -->
+                            <div class="flex justify-between items-start mb-6">
+                                <span class="status-badge 
+                                    {% if project.status == 'active' %}bg-emerald-500/20 text-emerald-400
+                                    {% elseif project.status == 'completed' %}bg-blue-500/20 text-blue-400
+                                    {% elseif project.status == 'draft' %}bg-amber-500/20 text-amber-400
+                                    {% else %}bg-gray-500/20 text-gray-400{% endif %}">
+                                    {{ project.status|capitalize }}
+                                </span>
+                                <span class="text-slate-500 text-sm">#{{ project.id }}</span>
+                            </div>
+                            
+                            <!-- Titre -->
+                            <h3 class="text-xl font-bold text-white mb-4">
+                                {{ project.title }}
+                            </h3>
+                            
+                            <!-- Description -->
+                            <p class="text-slate-300 text-sm mb-6">
+                                {% if project.description %}
+                                    {{ project.description|slice(0, 100) }}
+                                    {% if project.description|length > 100 %}...{% endif %}
+                                {% else %}
+                                    <span class="text-slate-500">Pas de description</span>
+                                {% endif %}
+                            </p>
+                            
+                            <!-- Dates -->
+                            <div class="space-y-3 mb-8">
+                                <div class="flex items-center text-slate-400 text-sm">
+                                    <i class="fas fa-calendar-alt mr-3"></i>
+                                    Début : {{ project.startDate|date('d/m/Y') }}
+                                </div>
+                                
+                                {% if project.endDate %}
+                                <div class="flex items-center text-slate-400 text-sm">
+                                    <i class="fas fa-calendar-check mr-3"></i>
+                                    Fin : {{ project.endDate|date('d/m/Y') }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Footer -->
+                            <div class="flex justify-between items-center pt-6 border-t border-white/10">
+                                <div class="text-slate-500 text-xs">
+                                    {{ project.createdAt|date('d/m/Y') }}
+                                </div>
+                                <!-- BOUTON CORRIGÉ -->
+                                {% if project.id is defined %}
+                                    <a href="/projects/{{ project.id }}" 
+                                       class="detail-btn flex items-center gap-2">
+                                        Détails
+                                        <i class="fas fa-arrow-right text-xs"></i>
+                                    </a>
+                                {% else %}
+                                    <span class="text-slate-500 text-sm">ID non disponible</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-20">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full mb-6">
+                    <i class="fas fa-folder-open text-4xl text-indigo-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-3">Aucun projet disponible</h3>
+                <p class="text-slate-400 mb-8">
+                    Aucun projet dans la base de données.
+                </p>
+                <a href="{{ path('app_home') }}" 
+                   class="px-6 py-3 bg-indigo-600 rounded-xl text-white font-medium hover:bg-indigo-500 transition-colors">
+                    Retour à l'accueil
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

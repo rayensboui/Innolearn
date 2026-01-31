@@ -1,0 +1,268 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Projet - InnoLearn{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slateBlue flex">
+    <!-- Sidebar identique à votre dashboard -->
+    <aside class="w-64 bg-navy border-r border-white/10 hidden md:block">
+        <div class="p-6 flex items-center gap-3">
+            <img src="{{ asset('images/logo.png') }}" alt="InnoLearn" class="w-10">
+            <h2 class="text-2xl font-bold text-white">InnoAdmin</h2>
+        </div>
+        <nav class="mt-6 px-4 space-y-2">
+            <a href="{{ path('app_admin_dashboard') }}" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Dashboard</a>
+            <a href="{{ path('app_backend_project_index') }}" class="block px-4 py-3 rounded-lg bg-indigo-600 text-white font-medium">Projets</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Événements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Abonnements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Utilisateurs</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Cours</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Opportunités</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Settings</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-white inline-flex items-center">
+                    <i class="fas fa-plus-circle mr-3 text-indigo-400"></i>Créer un nouveau projet
+                </h1>
+                <p class="text-slate-400 mt-2">Remplissez le formulaire ci-dessous pour créer un nouveau projet</p>
+            </div>
+            <a href="{{ path('app_backend_project_index') }}" 
+               class="bg-slate-600 hover:bg-slate-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i>Retour à la liste
+            </a>
+        </header>
+
+        <!-- Carte du formulaire -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-navy border border-white/10 rounded-2xl shadow-lg overflow-hidden">
+                <!-- En-tête de la carte -->
+                <div class="bg-indigo-600 px-8 py-6">
+                    <h2 class="text-xl font-bold text-white inline-flex items-center">
+                        <i class="fas fa-edit mr-3"></i>Formulaire de création
+                    </h2>
+                </div>
+                
+                <!-- Corps du formulaire -->
+                <div class="p-8">
+                    {{ form_start(form, {'attr': {'class': 'space-y-8'}}) }}
+                    
+                    <!-- Titre du projet -->
+                    <div>
+                        {{ form_label(form.title, null, {'label_attr': {'class': 'block text-sm font-medium text-white mb-2'}}) }}
+                        {{ form_widget(form.title, {'attr': {
+                            'class': 'w-full bg-slateBlue border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors' ~ (form.title.vars.errors|length ? ' border-red-500' : '')
+                        }}) }}
+                        {% if form.title.vars.errors %}
+                            <div class="mt-2 text-red-400 text-sm flex items-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ form_errors(form.title) }}
+                            </div>
+                        {% endif %}
+                        {% if form.title.vars.help %}
+                            <small class="mt-2 text-slate-400 text-sm">{{ form.title.vars.help }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        {{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-medium text-white mb-2'}}) }}
+                        {{ form_widget(form.description, {'attr': {
+                            'class': 'w-full bg-slateBlue border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors resize-none' ~ (form.description.vars.errors|length ? ' border-red-500' : ''),
+                            'rows': 5
+                        }}) }}
+                        {% if form.description.vars.errors %}
+                            <div class="mt-2 text-red-400 text-sm flex items-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ form_errors(form.description) }}
+                            </div>
+                        {% endif %}
+                        {% if form.description.vars.help %}
+                            <small class="mt-2 text-slate-400 text-sm">{{ form.description.vars.help }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Statut et Date début -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Statut -->
+                        <div>
+                            {{ form_label(form.status, null, {'label_attr': {'class': 'block text-sm font-medium text-white mb-2'}}) }}
+                            {{ form_widget(form.status, {'attr': {
+                                'class': 'w-full bg-slateBlue border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors' ~ (form.status.vars.errors|length ? ' border-red-500' : '')
+                            }}) }}
+                            {% if form.status.vars.errors %}
+                                <div class="mt-2 text-red-400 text-sm flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    {{ form_errors(form.status) }}
+                                </div>
+                            {% endif %}
+                            {% if form.status.vars.help %}
+                                <small class="mt-2 text-slate-400 text-sm">{{ form.status.vars.help }}</small>
+                            {% endif %}
+                        </div>
+
+                        <!-- Date début -->
+                        <div>
+                            {{ form_label(form.startDate, null, {'label_attr': {'class': 'block text-sm font-medium text-white mb-2'}}) }}
+                            {{ form_widget(form.startDate, {'attr': {
+                                'class': 'w-full bg-slateBlue border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors' ~ (form.startDate.vars.errors|length ? ' border-red-500' : '')
+                            }}) }}
+                            {% if form.startDate.vars.errors %}
+                                <div class="mt-2 text-red-400 text-sm flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    {{ form_errors(form.startDate) }}
+                                </div>
+                            {% endif %}
+                            {% if form.startDate.vars.help %}
+                                <small class="mt-2 text-slate-400 text-sm">{{ form.startDate.vars.help }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Date fin -->
+                    <div>
+                        {{ form_label(form.endDate, null, {'label_attr': {'class': 'block text-sm font-medium text-white mb-2'}}) }}
+                        {{ form_widget(form.endDate, {'attr': {
+                            'class': 'w-full bg-slateBlue border border-white/20 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors' ~ (form.endDate.vars.errors|length ? ' border-red-500' : '')
+                        }}) }}
+                        {% if form.endDate.vars.errors %}
+                            <div class="mt-2 text-red-400 text-sm flex items-center">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ form_errors(form.endDate) }}
+                            </div>
+                        {% endif %}
+                        {% if form.endDate.vars.help %}
+                            <small class="mt-2 text-slate-400 text-sm">{{ form.endDate.vars.help }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Boutons d'action -->
+                    <div class="pt-6 border-t border-white/10 flex justify-between">
+                        <button type="reset" 
+                                class="bg-slate-600 hover:bg-slate-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center">
+                            <i class="fas fa-redo mr-2"></i>Réinitialiser
+                        </button>
+                        <button type="submit" 
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg transition-colors inline-flex items-center font-medium shadow-lg hover:shadow-xl">
+                            <i class="fas fa-save mr-3"></i>Enregistrer le projet
+                        </button>
+                    </div>
+                    
+                    {{ form_end(form) }}
+                </div>
+                
+                <!-- Pied de page de la carte -->
+                <div class="bg-slateBlue border-t border-white/10 px-8 py-4">
+                    <div class="text-slate-400 text-sm inline-flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Les champs marqués d'un * sont obligatoires
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Styles supplémentaires -->
+<style>
+/* Style pour les labels requis */
+label.required::after {
+    content: " *";
+    color: #f87171; /* red-400 */
+}
+
+/* Animation pour les champs de formulaire */
+input, select, textarea {
+    transition: all 0.2s ease;
+}
+
+/* Style pour les erreurs de formulaire */
+.border-red-500 {
+    border-color: #ef4444;
+}
+
+/* Style pour les messages d'aide */
+small.text-slate-400 {
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+</style>
+
+<!-- Script pour la validation -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Focus sur le premier champ
+    const firstInput = document.querySelector('form input:not([type="hidden"]), form select, form textarea');
+    if (firstInput) {
+        firstInput.focus();
+    }
+    
+    // Validation visuelle
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        // Validation à la perte de focus
+        input.addEventListener('blur', function() {
+            if (!this.checkValidity()) {
+                this.classList.add('border-red-500');
+            } else {
+                this.classList.remove('border-red-500');
+            }
+        });
+        
+        // Retirer l'erreur quand l'utilisateur commence à taper
+        input.addEventListener('input', function() {
+            if (this.classList.contains('border-red-500')) {
+                this.classList.remove('border-red-500');
+            }
+        });
+    });
+    
+    // Validation à la soumission
+    form.addEventListener('submit', function(event) {
+        let isValid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.classList.add('border-red-500');
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            event.preventDefault();
+            // Afficher un message d'erreur général
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-6 flex items-center';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle mr-3 text-xl"></i>
+                <div>
+                    <strong class="font-medium">Veuillez corriger les erreurs ci-dessous</strong>
+                    <p class="text-sm mt-1">Certains champs contiennent des erreurs ou sont obligatoires.</p>
+                </div>
+            `;
+            
+            // Insérer le message d'erreur en haut du formulaire
+            const formBody = form.querySelector('.space-y-8');
+            if (formBody) {
+                formBody.insertBefore(errorDiv, formBody.firstChild);
+            }
+            
+            // Scroll vers le haut pour voir l'erreur
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+    
+    // Date picker amélioré (si vous avez un datepicker)
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        // Ajouter une classe pour le style du datepicker
+        input.classList.add('datepicker');
+    });
+});
+</script>
+{% endblock %}

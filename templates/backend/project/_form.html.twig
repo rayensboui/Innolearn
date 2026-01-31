@@ -1,0 +1,59 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<div class="mb-3">
+    {{ form_label(form.title, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.title, {'attr': {'class': 'form-control' ~ (form.title.vars.errors|length ? ' is-invalid' : '')}}) }}
+    <div class="invalid-feedback">
+        {{ form_errors(form.title) }}
+    </div>
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form.description.vars.errors|length ? ' is-invalid' : '')}}) }}
+    <div class="invalid-feedback">
+        {{ form_errors(form.description) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.status, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.status, {'attr': {'class': 'form-select' ~ (form.status.vars.errors|length ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.status) }}
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        {{ form_label(form.startDate, null, {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.startDate, {'attr': {'class': 'form-control' ~ (form.startDate.vars.errors|length ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">
+            {{ form_errors(form.startDate) }}
+        </div>
+    </div>
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.endDate, null, {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.endDate, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}
+
+<script>
+// Validation côté client
+document.addEventListener('DOMContentLoaded', function() {
+    const forms = document.querySelectorAll('.needs-validation');
+    
+    Array.from(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>

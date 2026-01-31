@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}InnoLearn{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{{ asset('images/logo.png') }}">
+        
+        {# Tailwind CSS (CDN for instant styling) #}
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            navy: '#1A1F2E',
+                            slateBlue: '#2A3142',
+                            darkBg: '#0F1419',
+                            indigo: '#6366F1',
+                            purple: '#8B5CF6',
+                            pink: '#EC4899',
+                            emerald: '#10B981',
+                            amber: '#F59E0B'
+                        }
+                    }
+                }
+            }
+        </script>
+        
+        {% block stylesheets %}
+            {# Direct link to public file to ensure it loads even if AssetMapper has issues #}
+            <link rel="stylesheet" href="{{ asset('css/site.css') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+            <script type="module" src="{{ asset('js/site.js') }}"></script>
+        {% endblock %}
+    </head>
+    <body class="bg-navy text-white antialiased overflow-x-hidden selection:bg-pink selection:text-white">
+        {% block body %}{% endblock %}
+    </body>
+</html>

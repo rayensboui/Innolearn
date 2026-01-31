@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+    --color-navy: #1A1F2E;
+}
+
+body {
+    background-color: var(--color-navy);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Background */
+.fixed-background-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 0%, #2A3142 0%, #1A1F2E 60%, #0F1419 100%);
+}
+
+.aurora-blob {
+    position: absolute;
+    filter: blur(100px);
+    opacity: 0.5;
+    animation: pulse 10s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+}
+
+/* 
+   IMAGE MASKING FIX
+   This forces the black areas of the image to become transparent using a luminance mask.
+   White areas of the image remain opaque, black areas become transparent.
+   Essential for "hologram" look on mixed backgrounds.
+*/
+.holo-mask {
+    /* Blend mode screen is good, but masking is cleaner if we want non-transparent brights */
+    mix-blend-mode: screen;
+    filter: brightness(1.3) contrast(1.6) saturate(1.2);
+    /* Fade edges to prevent boxy look */
+    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+    mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+/* Enhanced Floating Animations */
+.float-1 {
+    animation: float-book 6s ease-in-out infinite, glow-pulse-book 3s ease-in-out infinite alternate;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.float-2 {
+    animation: float-brain 5s ease-in-out infinite, glow-pulse-brain 4s ease-in-out infinite alternate, rotate-subtle 20s linear infinite;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+@keyframes float-book {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) rotateX(0deg) rotateZ(0deg);
+    }
+    25% {
+        transform: translateY(-20px) translateX(10px) rotateX(5deg) rotateZ(2deg);
+    }
+    50% {
+        transform: translateY(-30px) translateX(0px) rotateX(0deg) rotateZ(-2deg);
+    }
+    75% {
+        transform: translateY(-20px) translateX(-10px) rotateX(-5deg) rotateZ(2deg);
+    }
+}
+
+@keyframes float-brain {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px) scale(1);
+    }
+    33% {
+        transform: translateY(-25px) translateX(-15px) scale(1.05);
+    }
+    66% {
+        transform: translateY(-35px) translateX(15px) scale(0.98);
+    }
+}
+
+@keyframes glow-pulse-book {
+    0% {
+        filter: brightness(1.3) contrast(1.6) saturate(1.2) drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+    }
+    100% {
+        filter: brightness(1.5) contrast(1.8) saturate(1.4) drop-shadow(0 0 40px rgba(139, 92, 246, 0.8));
+    }
+}
+
+@keyframes glow-pulse-brain {
+    0% {
+        filter: brightness(1.3) contrast(1.6) saturate(1.2) drop-shadow(0 0 25px rgba(236, 72, 153, 0.5));
+    }
+    100% {
+        filter: brightness(1.6) contrast(1.9) saturate(1.5) drop-shadow(0 0 50px rgba(236, 72, 153, 0.9));
+    }
+}
+
+@keyframes rotate-subtle {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Layout Fix: Sticky Hero instead of Fixed Overlay */
+.hero-wrapper {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.content-stream {
+    position: relative;
+    z-index: 20;
+    /* No huge padding needed if we follow flow, 
+       but we want parallax overlap so let's use negative margins carefully 
+       OR just standard flow with parallax transforms. 
+       Let's use standard flow to prevent the overlap bug seen. 
+    */
+    background: transparent;
+}
+
+/* Glass Panel - Solid enough to read, but glassy */
+.glass-panel {
+    background: rgba(26, 31, 46, 0.6);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+    border-radius: 2rem;
+}
+
+/* Refined Typography */
+.text-gradient {
+    background: linear-gradient(to right, #ffffff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-accent {
+    background: linear-gradient(135deg, #818CF8 0%, #C084FC 50%, #F472B6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.3));
+}

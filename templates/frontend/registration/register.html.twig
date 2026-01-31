@@ -1,0 +1,285 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sign Up - InnoLearn{% endblock %}
+
+{% block body %}
+<div class="fixed inset-0 flex bg-[#03060f] overflow-hidden select-none text-white">
+    
+    <!-- LEFT: ANIMATION ZONE (SECURE PORTAL) -->
+    <!-- LEFT: ANIMATION ZONE (SECURE PORTAL) -->
+    <div class="hidden lg:flex w-1/2 relative h-full items-center justify-center border-r border-white/5">
+        <!-- Parallax Atmosphere -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-30 pointer-events-none">
+            <div class="absolute w-[800px] h-[800px] rounded-full border border-blue-500/10 animate-pulse-slow"></div>
+            <div class="absolute w-[500px] h-[500px] rounded-full border border-blue-500/20"></div>
+            <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-600/5 blur-[150px] rounded-full shadow-[0_0_100px_rgba(59,130,246,0.1)]"></div>
+        </div>
+
+        <!-- MACHINERY UNIT (Geometric Centering via flex parent) -->
+        <div class="portal-container relative z-10 scale-110 xl:scale-125 will-change-transform origin-center">
+            <svg width="240" height="420" viewBox="0 -150 240 420" fill="none">
+                <defs>
+                    <linearGradient id="slotInternal" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#03060f;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="cardMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#334155;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+                    </linearGradient>
+                    <clipPath id="cardChannel">
+                        <rect x="25" y="-300" width="190" height="700" rx="15" />
+                    </clipPath>
+                    <radialGradient id="scannerGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.25" />
+                        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0" />
+                    </radialGradient>
+                </defs>
+
+                <!-- REAR HOUSING -->
+                <rect x="20" y="60" width="200" height="200" rx="30" fill="#03060f" stroke="#1e293b" stroke-width="2"/>
+                <rect x="35" y="100" width="170" height="120" rx="10" fill="url(#slotInternal)" />
+
+                <!-- ID CARD -->
+                <g class="id-card-unit" clip-path="url(#cardChannel)" style="transform-origin: 50% 50%; will-change: transform;">
+                    <rect x="45" y="-140" width="150" height="240" rx="12" fill="url(#cardMetal)" stroke="#3b82f6" stroke-width="1.5" />
+                    <rect x="45" y="-140" width="150" height="70" rx="12" fill="#3b82f6" fill-opacity="0.1" />
+                    <rect x="110" y="-135" width="20" height="4" rx="2" fill="#03060f" />
+                    <text x="120" y="-115" font-family="sans-serif" font-weight="black" font-size="10" fill="#3b82f6" fill-opacity="0.8" text-anchor="middle" letter-spacing="2">INNOLEARN</text>
+                    
+                    <!-- IDENTITY -->
+                    <g transform="translate(62, -10)">
+                        <rect x="0" y="0" width="36" height="30" rx="6" fill="#fbbf24" stroke="#92400e" stroke-width="1" />
+                        <path d="M5 15 H31 M18 0 V30" stroke="#92400e" stroke-width="0.5" opacity="0.6" />
+                    </g>
+                    <g transform="translate(142, -10)">
+                        <rect x="0" y="0" width="36" height="50" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.3" />
+                        <circle cx="18" cy="18" r="9" fill="#475569" />
+                        <path d="M6 42 Q18 30 30 42" stroke="#475569" stroke-width="8" fill="none" />
+                    </g>
+                    <g transform="translate(62, 45)">
+                        <rect x="0" y="0" width="55" height="6" rx="3" fill="#64748b" fill-opacity="0.5" />
+                        <rect x="0" y="12" width="40" height="4" rx="2" fill="#64748b" fill-opacity="0.3" />
+                        <rect x="0" y="24" width="116" height="4" rx="2" fill="#64748b" fill-opacity="0.15" />
+                    </g>
+                    <rect x="45" y="85" width="150" height="15" fill="#000" fill-opacity="0.5" />
+                </g>
+
+                <!-- FRONT ASSEMBLY -->
+                <rect x="20" y="60" width="200" height="200" rx="30" fill="none" stroke="#3b82f6" stroke-width="3" />
+                <rect x="35" y="100" width="170" height="120" rx="10" fill="url(#scannerGlow)" stroke="#3b82f6" stroke-width="1.5" class="portal-slot-win" />
+                <g class="entry-port">
+                    <rect x="40" y="50" width="160" height="22" rx="4" fill="#1e293b" stroke="#60a5fa" stroke-width="2"/>
+                    <rect x="48" y="59" width="144" height="4" rx="2" fill="#03060f" />
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- RIGHT: MASCOT BOOK ZONE -->
+    <div class="w-full lg:w-1/2 h-full bg-gradient-to-br from-[#6366f1] to-[#4338ca] relative flex flex-col items-center p-8 overflow-hidden lg:rounded-r-[3rem] lg:my-4 lg:mr-4 shadow-2xl">
+        
+        <!-- Premium Book Spine (Rounded with lighting) -->
+        <div class="absolute left-0 top-0 bottom-0 w-28 bg-gradient-to-r from-[#3730a3] via-[#4338ca] to-[#312e81] z-30 shadow-[10px_0_30px_rgba(0,0,0,0.4)] flex flex-col items-center py-10 gap-24">
+            <!-- Binding Ribs (Raised effect) -->
+            <div class="w-full h-2 bg-[#312e81] shadow-inner opacity-40"></div>
+            <div class="w-full h-2 bg-[#312e81] shadow-inner opacity-40 mt-auto"></div>
+            <div class="w-full h-2 bg-[#312e81] shadow-inner opacity-40 mb-12"></div>
+        </div>
+
+        <!-- The "Groove" (Structural bend line) -->
+        <div class="absolute left-28 top-0 bottom-0 w-2 bg-black/20 z-20 blur-[2px]"></div>
+
+        <!-- Authentic Fanned Paper Stack (Right edge) -->
+        <div class="absolute right-0 top-0 bottom-0 w-16 bg-[#fefcf3] z-10 rounded-r-[3rem] shadow-[-25px_0_50px_rgba(0,0,0,0.35)] border-l border-black/10 flex overflow-hidden">
+            <!-- Random organic page edge simulation -->
+            <div class="h-full w-[1px] bg-black/5 ml-[4px]"></div>
+            <div class="h-full w-[2px] bg-black/10 ml-[2px]"></div>
+            <div class="h-full w-[1px] bg-black/5 ml-[6px]"></div>
+            <div class="h-full w-[1px] bg-black/15 ml-[3px]"></div>
+            <div class="h-full w-[1px] bg-black/5 ml-[8px]"></div>
+            <div class="h-full w-[2px] bg-black/10 ml-[2px]"></div>
+            <div class="h-full w-[1px] bg-black/5 ml-[4px]"></div>
+            <div class="h-full w-[3px] bg-black/10 ml-[3px] opacity-30"></div>
+        </div>
+
+        <!-- Physical Cover Flap Shadow (Creates depth over pages) -->
+        <div class="absolute right-16 top-0 bottom-0 w-6 bg-gradient-to-r from-transparent to-black/30 z-20 pointer-events-none"></div>
+
+        <div class="relative z-10 w-full max-w-lg h-full flex flex-col items-center justify-between py-2">
+            
+            <!-- LOGO: EMBOSSED EFFECT -->
+            <div class="w-full flex justify-center shrink-0">
+                <img src="{{ asset('images/logo.png') }}" alt="InnoLearn" class="w-full max-w-[520px] drop-shadow-[0_15px_30px_rgba(0,0,0,0.4)] brightness-125 saturate-125 invert-0">
+            </div>
+
+            <!-- MASCOT FACE: PREMIUM 3D -->
+            <div class="flex flex-col items-center shrink-0 py-2 scale-110">
+                <svg width="200" height="100" viewBox="0 0 200 100" class="drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]">
+                    <defs>
+                        <radialGradient id="eyeDeep" cx="50%" cy="50%" r="50%">
+                            <stop offset="70%" style="stop-color:white" />
+                            <stop offset="100%" style="stop-color:#e2e8f0" />
+                        </radialGradient>
+                    </defs>
+                    <!-- Expressive 3D Eyes -->
+                    <circle cx="65" cy="40" r="32" fill="url(#eyeDeep)" />
+                    <g class="pupil-left">
+                        <circle cx="65" cy="40" r="16" fill="#03060f" />
+                        <circle cx="72" cy="32" r="7" fill="white" fill-opacity="0.6" /> <!-- Highlight -->
+                    </g>
+                    
+                    <circle cx="135" cy="40" r="32" fill="url(#eyeDeep)" />
+                    <g class="pupil-right">
+                        <circle cx="135" cy="40" r="16" fill="#03060f" />
+                        <circle cx="142" cy="32" r="7" fill="white" fill-opacity="0.6" /> <!-- Highlight -->
+                    </g>
+                    
+                    <!-- Deep Smile -->
+                    <path d="M70 75 Q100 98 130 75" stroke="#03060f" stroke-width="14" fill="none" stroke-linecap="round" />
+                </svg>
+            </div>
+
+            <h1 class="text-white text-5xl font-black tracking-[0.2em] uppercase mb-1 drop-shadow-xl shrink-0 opacity-90">GENESIS</h1>
+
+            <!-- FORM -->
+            <form id="regForm" method="POST" class="w-full flex flex-col gap-4 flex-1 justify-center max-h-[420px] px-6" novalidate>
+                <div class="relative">
+                    <input name="full_name" type="text"
+                           class="w-full bg-white/10 border-4 border-white/20 text-white rounded-full px-10 py-5 placeholder-white/50 focus:outline-none focus:bg-white/20 focus:border-white transition-all font-black text-center text-2xl shadow-lg" 
+                           placeholder="DESIGNATOR NAME">
+                </div>
+
+                <div class="relative">
+                    <input name="email" type="email"
+                           class="w-full bg-white/10 border-4 border-white/20 text-white rounded-full px-10 py-5 placeholder-white/50 focus:outline-none focus:bg-white/20 focus:border-white transition-all font-black text-center text-2xl shadow-lg" 
+                           placeholder="NODE ADDRESS">
+                </div>
+
+                <div class="relative">
+                    <input name="password" type="password"
+                           class="w-full bg-white/10 border-4 border-white/20 text-white rounded-full px-10 py-5 placeholder-white/50 focus:outline-none focus:bg-white/20 focus:border-white transition-all font-black text-center text-2xl shadow-lg uppercase" 
+                           placeholder="KEY SEQUENCE">
+                </div>
+            </form>
+
+            <!-- CONTROLS -->
+            <div class="w-full flex flex-col items-center gap-3 mt-2 shrink-0 pb-4">
+                <button type="submit" form="regForm" id="submitBtn"
+                        class="w-full py-6 rounded-full bg-[#03060f] text-white font-black text-3xl hover:bg-black transition-all shadow-2xl active:scale-95 border-4 border-white/10 uppercase tracking-widest">
+                    INITIALIZE ID
+                </button>
+
+                <a href="{{ path('app_login') }}" class="text-white/80 font-black text-lg border-b-4 border-white/20 hover:border-white/60 hover:text-white transition-all uppercase tracking-tight">
+                    EXISTING UNIT? ACCESS NETWORK
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes pulse-slow { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.2; } }
+    .animate-pulse-slow { animation: pulse-slow 8s infinite; }
+</style>
+
+<!-- GSAP -->
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const card = document.querySelector('.id-card-unit');
+    const slot = document.querySelector('.portal-slot-win');
+    const form = document.getElementById('regForm');
+    const inputs = form.querySelectorAll('input');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!card || typeof gsap !== 'undefined' === false) return;
+
+    // 1. INITIAL SETUP
+    let isUnlocked = false;
+    // Set initially seated firmly at portal entrance (Perfectly Grounded)
+    gsap.set(card, { y: 0, opacity: 1, x: 0 });
+
+    // 2. GRANULAR PROGRESS LOGIC
+    const updateProgress = () => {
+        const total = inputs.length;
+        const totalChars = Array.from(inputs).reduce((acc, i) => acc + i.value.trim().length, 0);
+
+        if (isUnlocked) return;
+
+        // Calculate granular progress (0 to 1)
+        const progress = totalChars === 0 ? 0 : Array.from(inputs).reduce((acc, i) => {
+            const charWeight = Math.min(i.value.trim().length / 8, 1);
+            return acc + (charWeight / total);
+        }, 0);
+
+        // Smoothly interpolate from GROUNDED (0) to DEEP (180)
+        gsap.to(card, {
+            y: gsap.utils.interpolate(0, 180, progress),
+            duration: 0.5,
+            ease: "power2.out"
+        });
+
+        // Dynamic Glow
+        gsap.to(slot, {
+            strokeWidth: gsap.utils.interpolate(1.5, 5, progress),
+            duration: 0.5
+        });
+    };
+
+    inputs.forEach(i => i.addEventListener('input', updateProgress));
+
+    // 3. SUCCESS / SUBMIT LOGIC
+    const handleSuccess = (e) => {
+        const isComplete = Array.from(inputs).every(i => i.value.trim().length > 0);
+        if (!isComplete) {
+            gsap.fromTo("#regForm", { x: -8 }, { x: 8, repeat: 5, yoyo: true, duration: 0.04 });
+            e.preventDefault();
+            return;
+        }
+
+        if (isUnlocked) return;
+        isUnlocked = true;
+
+        const tl = gsap.timeline();
+        // Physical impact: Slam down -> Glow burst
+        tl.to(card, { y: 200, opacity: 0.2, duration: 0.3, ease: "power4.in" })
+          .to(slot, { 
+              fill: "#3b82f6", 
+              fillOpacity: 1, 
+              strokeWidth: 8, 
+              duration: 0.2 
+          }, "-=0.1")
+          .to(".portal-container", { 
+              filter: "drop-shadow(0 0 60px rgba(59,130,246,1))", 
+              scale: 1.08, 
+              duration: 0.4, 
+              ease: "elastic.out(1, 0.3)" 
+          }, "-=0.1");
+
+        e.preventDefault();
+    };
+
+    form.addEventListener('submit', handleSuccess);
+
+    // MASCOT MOUSE EFFECT
+    document.addEventListener("mousemove", (e) => {
+        if (!gsap) return;
+        const { clientX, clientY } = e;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        
+        const moveX = (clientX - centerX) / centerX;
+        const moveY = (clientY - centerY) / centerY;
+        
+        gsap.to(".pupil-left, .pupil-right", {
+            x: moveX * 12,
+            y: moveY * 12,
+            duration: 0.4,
+            ease: "power2.out"
+        });
+    });
+});
+</script>
+{% endblock %}

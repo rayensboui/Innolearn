@@ -1,0 +1,279 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}InnoLearn - Future of Education{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script> 
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<!-- V1 MOUSE PARALLAX CONTAINER -->
+<div class="mouse-parallax-container fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div class="fixed-background-wrapper">
+         <div class="aurora-blob bg-indigo-600/30 w-[60vw] h-[60vw] top-[-10%] left-[-10%]"></div>
+         <div class="aurora-blob bg-purple-600/20 w-[60vw] h-[60vw] bottom-[-10%] right-[-10%]"></div>
+    </div>
+    
+    <!-- ORIGINAL ELEMENTS (Book/Brain) -->
+    <div class="parallax-layer layer-1 absolute inset-0 transition-transform duration-75 ease-out">
+        <div class="absolute top-[18%] left-[5%] w-[35vw] max-w-[450px] float-1 opacity-70 mix-blend-screen">
+             <img src="{{ asset('images/book-hologram.png') }}" class="w-full holo-mask" alt="Holographic Book">
+        </div>
+    </div>
+
+    <div class="parallax-layer layer-2 absolute inset-0 transition-transform duration-75 ease-out">
+        <div class="absolute bottom-[20%] right-[5%] w-[32vw] max-w-[420px] float-2 opacity-70 mix-blend-screen">
+             <img src="{{ asset('images/digital-brain.png') }}" class="w-full holo-mask" alt="Digital Brain">
+        </div>
+    </div>
+</div>
+
+<div class="relative z-10 w-full overflow-hidden">
+    
+    <!-- HERO SECTION -->
+    <section class="min-h-screen flex flex-col items-center justify-center p-6 mb-20">
+        <div class="text-center max-w-5xl mx-auto mt-20 relative z-20">
+             <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-none drop-shadow-2xl flex flex-col items-center gap-6">
+                <img src="{{ asset('images/logo.png') }}" alt="InnoLearn Logo" class="w-3/4 md:w-1/2 mb-6 drop-shadow-[0_0_40px_rgba(99,102,241,0.5)]">
+                <span>Welcome to <br><span class="text-gradient-accent">InnoLearn</span></span>
+             </h1>
+             
+             <p class="text-2xl md:text-3xl text-slate-300 font-light mb-14 max-w-4xl mx-auto leading-relaxed">
+                An innovative platform designed to meet the needs of all students, regardless of their field of study.
+             </p>
+             
+             <p class="text-lg text-slate-400 mb-12 max-w-3xl mx-auto">
+                Centralize educational resources, academic and professional opportunities, and collaboration spaces to support students throughout their journey.
+             </p>
+
+             <div class="flex flex-col sm:flex-row justify-center gap-8">
+                <a href="{{ path('app_register') }}" class="px-12 py-6 rounded-full bg-white text-navy font-bold text-xl hover:scale-105 transition-all shadow-[0_0_40px_rgba(255,255,255,0.4)] flex items-center justify-center">
+                    Start Your Journey
+                </a>
+                <a href="{{ path('app_login') }}" class="px-12 py-6 rounded-full border-2 border-white/20 hover:border-white/60 text-white font-bold text-xl hover:scale-105 transition-all backdrop-blur-sm flex items-center justify-center">
+                    Member Login
+                </a>
+             </div>
+        </div>
+        
+        <div class="absolute bottom-10 animate-bounce opacity-40">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="max-w-7xl mx-auto px-4 py-24">
+        <div class="glass-panel p-12 md:p-20">
+            <div class="flex flex-col items-center mb-20">
+                <img src="{{ asset('images/logo.png') }}" alt="InnoLearn Logo" class="w-3/4 md:w-[380px] mb-10 drop-shadow-[0_0_30px_rgba(99,102,241,0.4)]">
+                <h2 class="text-5xl font-black text-white text-center">About InnoLearn</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="space-y-5">
+                    <div class="w-16 h-1.5 bg-indigo-500 rounded-full mb-8"></div>
+                    <h3 class="text-2xl font-bold text-white">Our Mission</h3>
+                    <p class="text-slate-400 text-lg leading-relaxed">To provide a unified platform that eliminates the need for students to navigate multiple websites and services. Everything you need for academic success in one place.</p>
+                </div>
+                <div class="space-y-5">
+                    <div class="w-16 h-1.5 bg-purple-500 rounded-full mb-8"></div>
+                    <h3 class="text-2xl font-bold text-white">For All Students</h3>
+                    <p class="text-slate-400 text-lg leading-relaxed">Whether you're studying engineering, arts, business, or sciences, InnoLearn adapts to your field and provides relevant resources tailored to your needs.</p>
+                </div>
+                <div class="space-y-5">
+                    <div class="w-16 h-1.5 bg-emerald-500 rounded-full mb-8"></div>
+                    <h3 class="text-2xl font-bold text-white">Complete Journey</h3>
+                    <p class="text-slate-400 text-lg leading-relaxed">From your first day as a student to building a successful career, we accompany you every step of the way with tools, guidance, and opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLATFORM FEATURES -->
+    <section class="max-w-7xl mx-auto px-4 py-24">
+        <h2 class="text-center text-6xl font-bold text-white mb-24 tracking-tight">Platform <span class="text-indigo-400">Features</span></h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="glass-panel p-10 hover:bg-white/5 transition-colors group">
+                <div class="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">📚</div>
+                <h3 class="text-2xl font-bold text-white mb-4">Centralized Resources</h3>
+                <p class="text-slate-400 text-base">Access all your educational materials, textbooks, research papers, and study guides in one organized library.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="glass-panel p-10 hover:bg-white/5 transition-colors group">
+                <div class="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">🎓</div>
+                <h3 class="text-2xl font-bold text-white mb-4">Academic Support</h3>
+                <p class="text-slate-400 text-base">Get personalized learning paths, tutoring services, and academic counseling tailored to your program.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="glass-panel p-10 hover:bg-white/5 transition-colors group">
+                <div class="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">💼</div>
+                <h3 class="text-2xl font-bold text-white mb-4">Career Development</h3>
+                <p class="text-slate-400 text-base">Explore internships, job opportunities, and professional development resources to build your career.</p>
+            </div>
+            <!-- Feature 4 -->
+            <div class="glass-panel p-10 hover:bg-white/5 transition-colors group">
+                <div class="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">🤝</div>
+                <h3 class="text-2xl font-bold text-white mb-4">Collaboration Tools</h3>
+                <p class="text-slate-400 text-base">Connect with peers, form study groups, and work on projects together with integrated collaboration features.</p>
+            </div>
+            <!-- Feature 5 -->
+            <div class="glass-panel p-10 hover:bg-white/5 transition-colors group">
+                <div class="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">📊</div>
+                <h3 class="text-2xl font-bold text-white mb-4">Progress Tracking</h3>
+                <p class="text-slate-400 text-base">Monitor your academic progress, set goals, and receive insights to optimize your learning journey.</p>
+            </div>
+            <!-- Feature 6 -->
+            <div class="glass-panel p-10 hover:bg-white/5 transition-colors group">
+                <div class="text-5xl mb-8 group-hover:scale-110 transition-transform origin-left">🌐</div>
+                <h3 class="text-2xl font-bold text-white mb-4">Global Community</h3>
+                <p class="text-slate-400 text-base">Join a worldwide network of students, share experiences, and learn from diverse perspectives.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- EDUCATIONAL RESOURCES -->
+    <section class="max-w-7xl mx-auto px-4 py-24 min-h-[50vh]">
+        <h2 class="text-5xl font-bold text-white mb-16 border-l-4 border-emerald-500 pl-8">Educational Resources</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="glass-panel p-8 flex flex-col justify-between h-72 bg-gradient-to-br from-indigo-900/40 to-transparent">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-3">Digital Library</h3>
+                    <p class="text-sm text-slate-300">Access thousands of e-books, journals, and academic publications.</p>
+                </div>
+                <button class="w-full py-3 bg-white/10 rounded-lg text-base text-white hover:bg-white/20 transition-colors">Browse Library</button>
+            </div>
+            <div class="glass-panel p-8 flex flex-col justify-between h-72 bg-gradient-to-br from-purple-900/40 to-transparent">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-3">Video Lectures</h3>
+                    <p class="text-sm text-slate-300">Watch recorded lectures from top universities and industry experts.</p>
+                </div>
+                <button class="w-full py-3 bg-white/10 rounded-lg text-base text-white hover:bg-white/20 transition-colors">Watch Now</button>
+            </div>
+            <div class="glass-panel p-8 flex flex-col justify-between h-72 bg-gradient-to-br from-emerald-900/40 to-transparent">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-3">Study Materials</h3>
+                    <p class="text-sm text-slate-300">Download course notes, practice exams, and supplementary materials.</p>
+                </div>
+                <button class="w-full py-3 bg-white/10 rounded-lg text-base text-white hover:bg-white/20 transition-colors">Get Materials</button>
+            </div>
+            <div class="glass-panel p-8 flex flex-col justify-between h-72 bg-gradient-to-br from-blue-900/40 to-transparent">
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-3">Research Tools</h3>
+                    <p class="text-sm text-slate-300">Utilize advanced search engines, citation managers, and databases.</p>
+                </div>
+                <button class="w-full py-3 bg-white/10 rounded-lg text-base text-white hover:bg-white/20 transition-colors">Explore Tools</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAREER OPPORTUNITIES -->
+    <section class="max-w-7xl mx-auto px-4 py-24">
+        <h2 class="text-5xl font-bold text-white mb-16 text-right border-r-4 border-amber-500 pr-8">Career Opportunities</h2>
+        <div class="grid md:grid-cols-3 gap-10">
+            <!-- Internship -->
+            <div class="glass-panel p-10 border-t-2 border-amber-400">
+                <div class="text-amber-400 font-mono text-base mb-3">500+ AVAILABLE</div>
+                <h3 class="text-3xl font-bold text-white mb-5">Internship Programs</h3>
+                <p class="text-slate-400 text-base mb-8">Connect with leading companies offering internships. Gain real-world experience.</p>
+                <ul class="text-sm text-slate-500 space-y-3">
+                    <li>• Paid internships</li>
+                    <li>• Remote and on-site</li>
+                    <li>• Academic credit available</li>
+                </ul>
+            </div>
+            <!-- Scholarship -->
+            <div class="glass-panel p-10 border-t-2 border-emerald-400">
+                <div class="text-emerald-400 font-mono text-base mb-3">200+ PROGRAMS</div>
+                <h3 class="text-3xl font-bold text-white mb-5">Scholarships & Grants</h3>
+                <p class="text-slate-400 text-base mb-8">Discover funding opportunities to support your education.</p>
+                <ul class="text-sm text-slate-500 space-y-3">
+                    <li>• Merit-based awards</li>
+                    <li>• Need-based assistance</li>
+                    <li>• Field-specific grants</li>
+                </ul>
+            </div>
+            <!-- Jobs -->
+            <div class="glass-panel p-10 border-t-2 border-indigo-400">
+                <div class="text-indigo-400 font-mono text-base mb-3">1000+ OPENINGS</div>
+                <h3 class="text-3xl font-bold text-white mb-5">Job Placements</h3>
+                <p class="text-slate-400 text-base mb-8">Access exclusive job listings from partner companies actively recruiting.</p>
+                <ul class="text-sm text-slate-500 space-y-3">
+                    <li>• Entry-level positions</li>
+                    <li>• Graduate programs</li>
+                    <li>• Career counseling</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- COLLABORATION SPACES -->
+    <section class="max-w-7xl mx-auto px-4 py-24">
+        <h2 class="text-center text-5xl font-bold text-white mb-20">Collaboration <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Spaces</span></h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Left Column -->
+            <div class="space-y-8">
+                <div class="glass-panel p-10 flex items-start gap-8 hover:translate-x-2 transition-transform">
+                    <div class="p-5 bg-white/5 rounded-2xl text-3xl">👥</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Study Groups</h3>
+                        <p class="text-slate-400 text-base">Form or join study groups with classmates. Share notes, discuss concepts, and prepare for exams together.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 flex items-start gap-8 hover:translate-x-2 transition-transform">
+                    <div class="p-5 bg-white/5 rounded-2xl text-3xl">🚀</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Project Teams</h3>
+                        <p class="text-slate-400 text-base">Collaborate on group projects with integrated tools for task management, file sharing, and communication.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <div class="glass-panel p-10 flex items-start gap-8 hover:translate-x-2 transition-transform">
+                    <div class="p-5 bg-white/5 rounded-2xl text-3xl">🤝</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Peer Mentoring</h3>
+                        <p class="text-slate-400 text-base">Connect with senior students who can guide you through your academic journey and share their experiences.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 flex items-start gap-8 hover:translate-x-2 transition-transform">
+                    <div class="p-5 bg-white/5 rounded-2xl text-3xl">💬</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Discussion Forums</h3>
+                        <p class="text-slate-400 text-base">Participate in subject-specific forums to ask questions, share insights, and engage with the community.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CTA -->
+    <section class="py-36 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent z-0"></div>
+        <div class="relative z-10 text-center max-w-4xl mx-auto px-4">
+            <h2 class="text-6xl font-black text-white mb-10">Ready to Transform Your Learning Journey?</h2>
+            <p class="text-2xl text-slate-300 mb-14 max-w-3xl mx-auto">Join thousands of students who are already using InnoLearn to achieve their academic and career goals.</p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-8 mb-24">
+                <a href="{{ path('app_register') }}" class="px-12 py-5 bg-indigo-600 rounded-xl text-white font-bold text-lg hover:bg-indigo-500 transition-colors">Create Free Account</a>
+                <button class="px-12 py-5 border border-white/20 bg-white/5 rounded-xl text-white font-bold text-lg hover:bg-white/10 transition-colors">Schedule Demo</button>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center border-t border-white/10 pt-10 gap-8">
+                <div class="flex flex-col items-center md:items-start gap-4">
+                    <img src="{{ asset('images/logo.png') }}" alt="InnoLearn" class="w-40">
+                    <p class="text-sm text-slate-500">Email: <a href="mailto:support@innolearn.com" class="text-indigo-400 hover:text-white">support@innolearn.com</a></p>
+                </div>
+                <div class="flex gap-6 text-sm text-slate-500">
+                    <span>Follow Us:</span>
+                    <a href="#" class="hover:text-white transition-colors">@InnoLearn</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+{% endblock %}

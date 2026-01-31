@@ -1,0 +1,321 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Projets - Backend{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slateBlue flex">
+    <!-- Sidebar identique à votre dashboard -->
+    <aside class="w-64 bg-navy border-r border-white/10 hidden md:block">
+        <div class="p-6 flex items-center gap-3">
+            <img src="{{ asset('images/logo.png') }}" alt="InnoLearn" class="w-10">
+            <h2 class="text-2xl font-bold text-white">InnoAdmin</h2>
+        </div>
+        <nav class="mt-6 px-4 space-y-2">
+            <a href="{{ path('app_admin_dashboard') }}" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Dashboard</a>
+            <a href="{{ path('app_backend_project_index') }}" class="block px-4 py-3 rounded-lg bg-indigo-600 text-white font-medium">Projets</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Événements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Abonnements</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Utilisateurs</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Cours</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Opportunités</a>
+            <a href="#" class="block px-4 py-3 rounded-lg text-slate-400 hover:bg-white/5 transition-colors">Settings</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-white">
+                <i class="fas fa-project-diagram mr-2"></i>Gestion des Projets
+            </h1>
+            <a href="{{ path('app_home') }}" class="text-indigo-400 hover:text-white pb-2 pl-4">Back to Site</a>
+        </header>
+
+        <!-- Carte principale -->
+        <div class="bg-navy border border-white/10 rounded-2xl shadow-lg mb-8">
+            <!-- En-tête de la carte -->
+            <div class="border-b border-white/10 px-8 py-6 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-white">Liste des Projets</h2>
+                
+                <!-- Barre de recherche -->
+                <form method="get" class="flex items-center space-x-2">
+                    <div class="relative">
+                        <input type="text" 
+                               name="search" 
+                               class="bg-slateBlue border border-white/20 text-white px-4 py-2 rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                               placeholder="Rechercher par ID, titre ou description..."
+                               value="{{ search }}">
+                    </div>
+                    <button type="submit" 
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    {% if search %}
+                    <a href="{{ path('app_backend_project_index') }}" 
+                       class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-times"></i>
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+            
+            <!-- Corps de la carte -->
+            <div class="p-8">
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto border-collapse">
+                        <thead>
+                            <tr class="bg-slateBlue/50 text-left">
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">
+                                    <a href="{{ path('app_backend_project_index', {
+                                        'sort': 'id', 
+                                        'order': sortBy == 'id' and order == 'asc' ? 'desc' : 'asc',
+                                        'search': search
+                                    }) }}" class="flex items-center justify-between hover:text-white transition-colors">
+                                        <span>ID</span>
+                                        <i class="fas fa-sort ml-2"></i>
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">
+                                    <a href="{{ path('app_backend_project_index', {
+                                        'sort': 'title', 
+                                        'order': sortBy == 'title' and order == 'asc' ? 'desc' : 'asc',
+                                        'search': search
+                                    }) }}" class="flex items-center justify-between hover:text-white transition-colors">
+                                        <span>Titre</span>
+                                        <i class="fas fa-sort ml-2"></i>
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">
+                                    <a href="{{ path('app_backend_project_index', {
+                                        'sort': 'status', 
+                                        'order': sortBy == 'status' and order == 'asc' ? 'desc' : 'asc',
+                                        'search': search
+                                    }) }}" class="flex items-center justify-between hover:text-white transition-colors">
+                                        <span>Statut</span>
+                                        <i class="fas fa-sort ml-2"></i>
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">
+                                    <a href="{{ path('app_backend_project_index', {
+                                        'sort': 'startDate', 
+                                        'order': sortBy == 'startDate' and order == 'asc' ? 'desc' : 'asc',
+                                        'search': search
+                                    }) }}" class="flex items-center justify-between hover:text-white transition-colors">
+                                        <span>Date début</span>
+                                        <i class="fas fa-sort ml-2"></i>
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">Date fin</th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider">
+                                    <a href="{{ path('app_backend_project_index', {
+                                        'sort': 'createdAt', 
+                                        'order': sortBy == 'createdAt' and order == 'asc' ? 'desc' : 'asc',
+                                        'search': search
+                                    }) }}" class="flex items-center justify-between hover:text-white transition-colors">
+                                        <span>Créé le</span>
+                                        <i class="fas fa-sort ml-2"></i>
+                                    </a>
+                                </th>
+                                <th class="px-6 py-3 text-sm font-medium text-slate-400 uppercase tracking-wider text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10">
+                            {% for project in projects %}
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-white font-bold">#{{ project.id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-white font-semibold">{{ project.title }}</td>
+                                <td class="px-6 py-4 text-sm text-slate-300">{{ project.description|slice(0, 80) }}{% if project.description|length > 80 %}...{% endif %}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% set status_colors = {
+                                        'draft': 'bg-slate-600',
+                                        'active': 'bg-emerald-600', 
+                                        'completed': 'bg-blue-600',
+                                        'cancelled': 'bg-red-600'
+                                    } %}
+                                    {% set status_text = {
+                                        'draft': 'Brouillon',
+                                        'active': 'Actif',
+                                        'completed': 'Terminé',
+                                        'cancelled': 'Annulé'
+                                    } %}
+                                    <span class="{{ status_colors[project.status] ?? 'bg-slate-600' }} text-white px-3 py-1 rounded-full text-xs font-medium">
+                                        {{ status_text[project.status] ?? project.status }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ project.startDate ? project.startDate|date('d/m/Y') : '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ project.endDate ? project.endDate|date('d/m/Y') : '-' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{{ project.createdAt ? project.createdAt|date('d/m/Y H:i') : '' }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <div class="flex justify-center space-x-2">
+                                        <!-- Bouton Voir -->
+                                        <a href="{{ path('app_backend_project_show', {'id': project.id}) }}" 
+                                           class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition-colors text-sm"
+                                           title="Voir les détails">
+                                            <i class="fas fa-eye mr-1"></i> Voir
+                                        </a>
+                                        
+                                        <!-- Bouton Éditer -->
+                                        <a href="{{ path('app_backend_project_edit', {'id': project.id}) }}" 
+                                           class="inline-flex items-center bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg transition-colors text-sm"
+                                           title="Modifier">
+                                            <i class="fas fa-edit mr-1"></i> Éditer
+                                        </a>
+                                        
+                                        <!-- Bouton Supprimer -->
+                                        <form method="post" 
+                                              action="{{ path('app_backend_project_delete', {'id': project.id}) }}" 
+                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');"
+                                              class="inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
+                                            <button type="submit" 
+                                                    class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg transition-colors text-sm"
+                                                    title="Supprimer">
+                                                <i class="fas fa-trash mr-1"></i> Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="px-6 py-12 text-center">
+                                    <div class="mb-4">
+                                        <i class="fas fa-inbox text-4xl text-slate-500"></i>
+                                    </div>
+                                    {% if search %}
+                                        <h3 class="text-lg font-medium text-slate-300 mb-2">Aucun projet trouvé pour "{{ search }}"</h3>
+                                        <p class="text-slate-400 mb-4">Essayez avec d'autres termes de recherche</p>
+                                        <a href="{{ path('app_backend_project_index') }}" class="bg-slate-600 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors inline-flex items-center">
+                                            <i class="fas fa-times mr-2"></i> Effacer la recherche
+                                        </a>
+                                    {% else %}
+                                        <h3 class="text-lg font-medium text-slate-300 mb-2">Aucun projet trouvé</h3>
+                                        <p class="text-slate-400 mb-4">Commencez par créer votre premier projet</p>
+                                        <a href="{{ path('app_backend_project_new') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors inline-flex items-center">
+                                            <i class="fas fa-plus mr-2"></i> Créer un projet
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="mt-8 flex justify-between items-center">
+                    <div>
+                        <a href="{{ path('app_backend_project_new') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Nouveau Projet
+                        </a>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        {% if search %}
+                        <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm inline-flex items-center">
+                            <i class="fas fa-search mr-1"></i> Recherche : "{{ search }}"
+                        </span>
+                        {% endif %}
+                        
+                        {% if sortBy != 'id' or order != 'asc' %}
+                        <span class="bg-slate-600 text-slate-300 px-3 py-1 rounded-full text-sm inline-flex items-center">
+                            <i class="fas fa-sort-amount-{{ order == 'asc' ? 'down' : 'up' }} mr-1"></i>
+                            Tri : {{ sortBy == 'id' ? 'ID' : 
+                                   sortBy == 'title' ? 'Titre' : 
+                                   sortBy == 'status' ? 'Statut' : 
+                                   sortBy == 'startDate' ? 'Date début' : 
+                                   'Date création' }} 
+                            ({{ order == 'asc' ? 'croissant' : 'décroissant' }})
+                        </span>
+                        {% endif %}
+                        
+                        <a href="{{ path('app_backend_project_export_pdf', {
+                            'sort': sortBy,
+                            'order': order,
+                            'search': search
+                        }) }}" 
+                           class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors inline-flex items-center"
+                           target="_blank"
+                           title="Exporter en PDF">
+                            <i class="fas fa-file-pdf mr-2"></i> Exporter PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Styles supplémentaires -->
+<style>
+.sort-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.sort-link:hover {
+    color: #ffffff;
+}
+
+.table th {
+    position: relative;
+    cursor: pointer;
+}
+
+.table th:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Animation pour le hover des lignes */
+tbody tr {
+    transition: background-color 0.2s;
+}
+
+/* Assurer que les boutons soient visibles */
+.flex.space-x-2 > * {
+    margin: 0 0.25rem;
+}
+
+/* Rendre les boutons plus visibles */
+.bg-blue-600, .bg-amber-600, .bg-red-600 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.bg-blue-600:hover, .bg-amber-600:hover, .bg-red-600:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+</style>
+
+<!-- Script pour les interactions -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Highlight de la ligne au survol
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+    
+    // Animation pour les boutons
+    const buttons = document.querySelectorAll('a, button');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-1px)';
+        });
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
+    });
+});
+</script>
+{% endblock %}
