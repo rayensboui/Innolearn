@@ -1,0 +1,86 @@
+<header class="dashboard-header">
+    <div class="header-left">
+        <div class="search-bar-global">
+            <i class="fas fa-search"></i>
+            <input type="text" id="globalSearch" placeholder="Recherche globale (cours, projets, événements...)">
+            <div class="search-shortcut">⌘K</div>
+        </div>
+    </div>
+    
+    <div class="header-actions">
+        <button class="icon-btn" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge-dot"></span>
+        </button>
+        <div class="user-profile-toggle" id="profileToggle">
+            <div class="avatar-wrapper">
+                <img src="https://ui-avatars.com/api/?name=Etudiant+User&background=6366f1&color=fff&bold=true" alt="User Avatar">
+                <span class="status-indicator online"></span>
+            </div>
+            <div class="user-info-brief">
+                <span class="user-name">Etudiant User</span>
+                <span class="user-role">Étudiant Premium</span>
+            </div>
+            <i class="fas fa-chevron-down toggle-arrow"></i>
+        </div>
+    </div>
+</header>
+
+<style>
+    .dashboard-header {
+        height: 80px;
+        background: white;
+        padding: 0 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .search-bar-global {
+        display: flex;
+        align-items: center;
+        background: #f8fafc;
+        padding: 0 1.25rem;
+        border-radius: 12px;
+        width: 450px;
+        height: 44px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+    }
+
+    .search-bar-global:focus-within {
+        background: white;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .search-bar-global i { color: #94a3b8; margin-right: 0.75rem; }
+    .search-bar-global input { background: transparent; border: none; outline: none; width: 100%; font-size: 0.9rem; color: #1e293b; }
+    .search-shortcut { font-size: 0.7rem; font-weight: 700; color: #94a3b8; background: white; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0; }
+
+    .header-actions { display: flex; align-items: center; gap: 2rem; }
+    
+    .icon-btn { 
+        background: #f8fafc; border: 1px solid #f1f5f9; width: 40px; height: 40px; border-radius: 10px; 
+        color: #64748b; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; transition: all 0.2s; 
+    }
+    .icon-btn:hover { background: white; color: #6366f1; border-color: #6366f120; }
+    .badge-dot { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: #f43f5e; border-radius: 50%; border: 2px solid white; }
+
+    .user-profile-toggle { display: flex; align-items: center; gap: 1rem; padding: 0.4rem 0.8rem; border-radius: 12px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+    .user-profile-toggle:hover { background: #f8fafc; border-color: #f1f5f9; }
+    
+    .avatar-wrapper { position: relative; }
+    .avatar-wrapper img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
+    .status-indicator { position: absolute; bottom: -1px; right: -1px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid white; }
+    .status-indicator.online { background: #10b981; }
+
+    .user-info-brief { display: flex; flex-direction: column; }
+    .user-name { font-size: 0.85rem; font-weight: 700; color: #1e293b; line-height: 1.2; }
+    .user-role { font-size: 0.7rem; font-weight: 500; color: #64748b; }
+    .toggle-arrow { font-size: 0.7rem; color: #94a3b8; margin-left: 0.5rem; transition: transform 0.3s; }
+</style>

@@ -1,0 +1,1572 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projets Collaboratifs - InnoLearn{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/dashboard-unified.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="dashboard-wrapper">
+    <!-- Sidebar Navigation -->
+    {{ include('student/_sidebar.html.twig', {active_menu: 'projects'}) }}
+
+    <main class="dashboard-content">
+        <!-- Unified Global Header -->
+        {{ include('student/_header.html.twig') }}
+
+        <div class="dashboard-main">
+            <header class="section-top-header">
+                <div class="header-info">
+                    <h1>Projets Collaboratifs</h1>
+                    <p>Rejoignez des équipes et construisez l'avenir ensemble.</p>
+                </div>
+            </header>
+
+            <!-- Barre d'outils simplifiée -->
+            <div class="toolbar">
+                <!-- Recherche -->
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Rechercher un projet...">
+                </div>
+
+                <!-- Tri simple -->
+                <div class="sort-dropdown">
+                    <select id="sortSelect">
+                        <option value="date-desc">Trier par: Date (récent)</option>
+                        <option value="date-asc">Date (ancien)</option>
+                        <option value="title-asc">Titre (A-Z)</option>
+                        <option value="title-desc">Titre (Z-A)</option>
+                    </select>
+                </div>
+
+                <!-- Statistiques -->
+                <button class="btn-stats" id="showStatsBtn">
+                    <i class="fas fa-chart-bar"></i>
+                    Graphiques
+                </button>
+
+                <!-- Export PDF -->
+                <button class="btn-pdf" id="exportPdfBtn">
+                    <i class="fas fa-file-pdf"></i>
+                    PDF
+                </button>
+            </div>
+
+            <!-- Statistiques Graphiques -->
+            <div class="stats-graphique-container" id="statsContainer" style="display: none;">
+                <div class="graphiques-header">
+                    <h2><i class="fas fa-chart-pie"></i> Analyse Graphique</h2>
+                    <p>Visualisation des données des projets par statut et date de création</p>
+                </div>
+                
+                <div class="graphiques-grid">
+                    <!-- Graphique 1: Répartition par statut (Camembert) -->
+                    <div class="graphique-card">
+                        <h3><i class="fas fa-chart-pie"></i> Répartition par Statut</h3>
+                        <div class="graphique-wrapper">
+                            <canvas id="statusChart" width="350" height="350"></canvas>
+                        </div>
+                        <div class="graphique-legend" id="statusLegend"></div>
+                    </div>
+                    
+                    <!-- Graphique 2: Évolution par date de création -->
+                    <div class="graphique-card">
+                        <h3><i class="fas fa-chart-line"></i> Évolution des Créations</h3>
+                        <div class="graphique-wrapper">
+                            <canvas id="creationChart" width="400" height="250"></canvas>
+                        </div>
+                        <div class="graphique-info">
+                            <div class="info-item">
+                                <span class="info-label">Période:</span>
+                                <span class="info-value" id="periodLabel">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Total:</span>
+                                <span class="info-value" id="totalProjects">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tableau récapitulatif -->
+                <div class="summary-table">
+                    <h3><i class="fas fa-table"></i> Récapitulatif par Statut</h3>
+                    <table id="statusTable">
+                        <thead>
+                            <tr>
+                                <th>Statut</th>
+                                <th>Nombre</th>
+                                <th>Pourcentage</th>
+                                <th>Dernier projet</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statusTableBody">
+                            <!-- Rempli par JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Liste des projets -->
+            <div class="project-grid" id="projectGrid">
+                {% for project in projects %}
+                <div class="project-card" 
+                     data-id="{{ project.id }}"
+                     data-title="{{ project.title|lower }}"
+                     data-status="{{ project.status }}"
+                     data-members="{{ project.members }}"
+                     data-created="{{ project.created_at|date('Y-m-d') }}">
+                    <div class="card-badges">
+                        <span class="project-badge badge-tech">{{ project.category }}</span>
+                        <span class="project-badge badge-status {{ project.status == 'Recherche membres' ? 'status-recherche' : (project.status == 'Complet' ? 'status-complet' : 'status-encours') }}">
+                            {{ project.status }}
+                        </span>
+                    </div>
+                    <div class="project-info">
+                        <h2>{{ project.title }}</h2>
+                        <p class="project-description">{{ project.description|slice(0, 120) }}...</p>
+                        <div class="project-lead">
+                            <img src="https://ui-avatars.com/api/?name={{ project.lead }}&background=6366f1&color=fff" class="lead-avatar" alt="Lead">
+                            <span>Lead: {{ project.lead }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>{{ project.members }}/{{ project.max_members }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="far fa-calendar"></i>
+                            <span>Créé: {{ project.created_at }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ project.duration }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-actions">
+                        <button class="btn-details" onclick="showDetails({{ project.id }})">
+                            <i class="fas fa-eye"></i> Détails
+                        </button>
+                        <button class="btn-join" {{ project.status == 'Complet' ? 'disabled' : '' }} onclick="applyToProject({{ project.id }})">
+                            {{ project.status == 'Complet' ? 'Complet' : 'Postuler' }}
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-projects">
+                    <p>Aucun projet disponible pour le moment.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <button class="page-btn" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button class="page-btn" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal Détails -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal-container">
+        <button class="modal-close" onclick="closeDetails()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="detailsContent"></div>
+    </div>
+</div>
+
+<!-- Modal de chargement PDF -->
+<div class="modal-overlay" id="pdfLoadingModal" style="display: none;">
+    <div class="modal-container" style="max-width: 400px; text-align: center;">
+        <h3>Génération du PDF en cours...</h3>
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: #6366f1;"></i>
+        </div>
+        <p style="margin-top: 1.5rem; color: #6b7280;">
+            Veuillez patienter pendant la génération du document.
+        </p>
+    </div>
+</div>
+
+<style>
+/* Toolbar */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    align-items: center;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.sort-dropdown select {
+    padding: 0.75rem 2rem 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    background: white;
+    font-size: 0.95rem;
+    min-width: 200px;
+}
+
+.btn-stats, .btn-pdf {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.btn-stats {
+    background: #10b981;
+    color: white;
+}
+
+.btn-stats:hover {
+    background: #059669;
+}
+
+.btn-pdf {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-pdf:hover {
+    background: #dc2626;
+}
+
+/* Statistiques Graphiques */
+.stats-graphique-container {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.graphiques-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.graphiques-header h2 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.graphiques-header p {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.graphiques-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.graphique-card {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s;
+}
+
+.graphique-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.graphique-card h3 {
+    font-size: 1.1rem;
+    color: #374151;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.graphique-wrapper {
+    position: relative;
+    height: 280px;
+    margin-bottom: 1rem;
+}
+
+.graphique-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.legend-count {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.legend-percentage {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.graphique-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Tableau récapitulatif */
+.summary-table {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.summary-table h3 {
+    font-size: 1.1rem;
+    color: #374151;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#statusTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#statusTable thead {
+    background: #6366f1;
+}
+
+#statusTable th {
+    padding: 1rem;
+    text-align: left;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+#statusTable tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: background 0.2s;
+}
+
+#statusTable tbody tr:hover {
+    background: #f3f4f6;
+}
+
+#statusTable td {
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-recherche { background: #fce7f3; color: #be185d; }
+.status-complet { background: #dcfce7; color: #166534; }
+.status-encours { background: #dbeafe; color: #1d4ed8; }
+.status-brouillon { background: #f3f4f6; color: #6b7280; }
+.status-annule { background: #fee2e2; color: #dc2626; }
+
+/* Project Grid */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.project-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.project-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-tech { background: #dbeafe; color: #1d4ed8; }
+.badge-status { background: #dcfce7; color: #166534; }
+.status-recherche { background: #fce7f3; color: #be185d; }
+.status-complet { background: #f3f4f6; color: #6b7280; }
+.status-encours { background: #dbeafe; color: #1d4ed8; }
+
+.project-info h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.75rem 0;
+}
+
+.project-description {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.project-lead {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.lead-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.project-meta {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.meta-item i {
+    font-size: 1rem;
+    color: #6366f1;
+}
+
+.project-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn-details, .btn-join {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.btn-details {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.btn-details:hover {
+    background: #e5e7eb;
+}
+
+.btn-join {
+    background: #6366f1;
+    color: white;
+}
+
+.btn-join:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.btn-join:hover:not(:disabled) {
+    background: #4f46e5;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.page-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #f3f4f6;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.page-number {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.page-number.active {
+    background: #6366f1;
+    color: white;
+    border-color: #6366f1;
+}
+
+.page-number:hover:not(.active) {
+    background: #f3f4f6;
+}
+
+/* Modals */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.modal-container h2 {
+    margin: 0 0 1.5rem 0;
+    color: #1f2937;
+    text-align: center;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    padding: 2rem;
+}
+
+/* No projects */
+.no-projects {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box,
+    .sort-dropdown select {
+        min-width: 100%;
+    }
+    
+    .graphiques-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #statusTable {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>
+
+<script>
+// Données des projets
+const projects = {{ projects|json_encode|raw }};
+
+// Configuration de pagination
+let currentPage = 1;
+const itemsPerPage = 6;
+let filteredProjects = [...projects];
+
+// Chart.js instances
+let statusChart = null;
+let creationChart = null;
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    renderProjects();
+    setupEventListeners();
+});
+
+// Écouteurs d'événements
+function setupEventListeners() {
+    // Recherche
+    document.getElementById('searchInput').addEventListener('input', filterProjects);
+    
+    // Tri simple
+    document.getElementById('sortSelect').addEventListener('change', sortProjects);
+    
+    // Statistiques
+    document.getElementById('showStatsBtn').addEventListener('click', toggleStats);
+    
+    // Export PDF
+    document.getElementById('exportPdfBtn').addEventListener('click', generatePDF);
+    
+    // Pagination
+    document.getElementById('prevPage').addEventListener('click', prevPage);
+    document.getElementById('nextPage').addEventListener('click', nextPage);
+}
+
+// Fonction de recherche
+function filterProjects() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    filteredProjects = projects.filter(project => {
+        return project.title.toLowerCase().includes(searchTerm) ||
+               project.description.toLowerCase().includes(searchTerm) ||
+               project.lead.toLowerCase().includes(searchTerm);
+    });
+    
+    currentPage = 1;
+    renderProjects();
+    updateCharts();
+}
+
+// Tri des projets
+function sortProjects() {
+    const sortBy = document.getElementById('sortSelect').value;
+    
+    filteredProjects.sort((a, b) => {
+        switch(sortBy) {
+            case 'date-desc':
+                return new Date(b.created_at.split('/').reverse().join('-')) - 
+                       new Date(a.created_at.split('/').reverse().join('-'));
+            case 'date-asc':
+                return new Date(a.created_at.split('/').reverse().join('-')) - 
+                       new Date(b.created_at.split('/').reverse().join('-'));
+            case 'title-asc':
+                return a.title.localeCompare(b.title);
+            case 'title-desc':
+                return b.title.localeCompare(a.title);
+            default:
+                return 0;
+        }
+    });
+    
+    renderProjects();
+}
+
+// Afficher/masquer les statistiques
+function toggleStats() {
+    const statsContainer = document.getElementById('statsContainer');
+    const isVisible = statsContainer.style.display === 'block';
+    statsContainer.style.display = isVisible ? 'none' : 'block';
+    
+    // Mettre à jour les graphiques si on les affiche
+    if (!isVisible) {
+        updateCharts();
+    }
+}
+
+// Mettre à jour tous les graphiques
+function updateCharts() {
+    destroyCharts(); // Détruire les anciens graphiques
+    createStatusChart();
+    createCreationChart();
+    updateStatusTable();
+}
+
+// Détruire les anciens graphiques
+function destroyCharts() {
+    if (statusChart) statusChart.destroy();
+    if (creationChart) creationChart.destroy();
+}
+
+// 1. Graphique des statuts (Camembert)
+function createStatusChart() {
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    
+    // Compter les projets par statut
+    const statusCounts = {};
+    const statusColors = {
+        'Recherche membres': { color: '#f87171', light: '#fce7f3' },
+        'Complet': { color: '#10b981', light: '#dcfce7' },
+        'En cours': { color: '#60a5fa', light: '#dbeafe' },
+        'Brouillon': { color: '#9ca3af', light: '#f3f4f6' },
+        'Annulé': { color: '#6b7280', light: '#fee2e2' }
+    };
+    
+    filteredProjects.forEach(project => {
+        statusCounts[project.status] = (statusCounts[project.status] || 0) + 1;
+    });
+    
+    // Filtrer les statuts qui ont des données
+    const labels = Object.keys(statusCounts);
+    const data = Object.values(statusCounts);
+    const backgroundColors = labels.map(label => statusColors[label]?.color || '#9ca3af');
+    const borderColors = labels.map(label => '#ffffff');
+    
+    // Calculer les pourcentages
+    const total = data.reduce((a, b) => a + b, 0);
+    
+    statusChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                            return `${label}: ${value} projets (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            cutout: '65%',
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+    
+    // Mettre à jour la légende
+    updateStatusLegend(labels, data, backgroundColors, statusColors, total);
+}
+
+function updateStatusLegend(labels, data, colors, statusColors, total) {
+    const legendContainer = document.getElementById('statusLegend');
+    
+    legendContainer.innerHTML = labels.map((label, index) => {
+        const value = data[index];
+        const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+        const colorInfo = statusColors[label] || { color: '#9ca3af', light: '#f3f4f6' };
+        
+        return `
+            <div class="legend-item">
+                <span class="legend-color" style="background: ${colors[index]}"></span>
+                <div class="legend-details">
+                    <span class="legend-label" style="color: ${colorInfo.color}; font-weight: 600;">${label}</span>
+                    <div class="legend-stats">
+                        <span class="legend-count">${value} projets</span>
+                        <span class="legend-percentage">(${percentage}%)</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// 2. Graphique d'évolution par date de création
+function createCreationChart() {
+    const ctx = document.getElementById('creationChart').getContext('2d');
+    
+    // Grouper par mois/année
+    const monthlyData = {};
+    filteredProjects.forEach(project => {
+        try {
+            const dateStr = project.created_at;
+            if (!dateStr) return;
+            
+            // Format: "jj/mm/aaaa" → extraire mois/année
+            const parts = dateStr.split('/');
+            if (parts.length === 3) {
+                const day = parts[0];
+                const month = parts[1];
+                const year = parts[2];
+                
+                // Vérifier si c'est une date valide
+                if (day && month && year && month.length === 2 && year.length === 4) {
+                    const monthYear = `${month}/${year}`;
+                    monthlyData[monthYear] = (monthlyData[monthYear] || 0) + 1;
+                }
+            }
+        } catch (e) {
+            console.warn('Date format error:', project.created_at);
+        }
+    });
+    
+    // Trier par date
+    const sortedEntries = Object.entries(monthlyData).sort(([dateA], [dateB]) => {
+        try {
+            const [monthA, yearA] = dateA.split('/');
+            const [monthB, yearB] = dateB.split('/');
+            const dateObjA = new Date(yearA, monthA - 1);
+            const dateObjB = new Date(yearB, monthB - 1);
+            return dateObjA - dateObjB;
+        } catch (e) {
+            return 0;
+        }
+    });
+    
+    const labels = sortedEntries.map(([date]) => date);
+    const data = sortedEntries.map(([, count]) => count);
+    
+    // Mettre à jour les informations
+    const total = filteredProjects.length;
+    const period = labels.length > 0 ? `${labels[0]} - ${labels[labels.length - 1]}` : 'Aucune donnée';
+    
+    document.getElementById('periodLabel').textContent = period;
+    document.getElementById('totalProjects').textContent = total;
+    
+    // Créer un gradient pour la ligne
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.8)');
+    gradient.addColorStop(1, 'rgba(99, 102, 241, 0.1)');
+    
+    creationChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Projets créés',
+                data: data,
+                backgroundColor: gradient,
+                borderColor: '#6366f1',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#6366f1',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 6,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw}`;
+                        },
+                        title: function(context) {
+                            return `Mois: ${context[0].label}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nombre de projets',
+                        color: '#6b7280'
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Mois/Année',
+                        color: '#6b7280'
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 3. Tableau récapitulatif par statut
+function updateStatusTable() {
+    const tableBody = document.getElementById('statusTableBody');
+    
+    // Compter les projets par statut
+    const statusData = {};
+    const statusColors = {
+        'Recherche membres': 'status-recherche',
+        'Complet': 'status-complet',
+        'En cours': 'status-encours',
+        'Brouillon': 'status-brouillon',
+        'Annulé': 'status-annule'
+    };
+    
+    filteredProjects.forEach(project => {
+        if (!statusData[project.status]) {
+            statusData[project.status] = {
+                count: 0,
+                projects: [],
+                lastDate: null
+            };
+        }
+        statusData[project.status].count++;
+        statusData[project.status].projects.push(project);
+        
+        // Trouver la date la plus récente
+        try {
+            const dateStr = project.created_at;
+            if (dateStr) {
+                const [day, month, year] = dateStr.split('/');
+                const projectDate = new Date(year, month - 1, day);
+                
+                if (!statusData[project.status].lastDate || 
+                    projectDate > statusData[project.status].lastDate.date) {
+                    statusData[project.status].lastDate = {
+                        date: projectDate,
+                        title: project.title
+                    };
+                }
+            }
+        } catch (e) {
+            // Ignorer les erreurs de date
+        }
+    });
+    
+    const total = filteredProjects.length;
+    
+    // Créer les lignes du tableau
+    let tableHTML = '';
+    
+    Object.entries(statusData).forEach(([status, data]) => {
+        const percentage = total > 0 ? Math.round((data.count / total) * 100) : 0;
+        const lastProject = data.lastDate 
+            ? `${data.lastDate.title} (${formatDate(data.lastDate.date)})`
+            : 'Aucun';
+        
+        tableHTML += `
+            <tr>
+                <td>
+                    <span class="status-badge ${statusColors[status] || 'status-brouillon'}">
+                        ${status}
+                    </span>
+                </td>
+                <td style="font-weight: 600;">${data.count}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span>${percentage}%</span>
+                        <div style="flex: 1; height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
+                            <div style="width: ${percentage}%; height: 100%; background: #6366f1;"></div>
+                        </div>
+                    </div>
+                </td>
+                <td style="color: #6b7280; font-size: 0.85rem;">${lastProject}</td>
+            </tr>
+        `;
+    });
+    
+    // Ligne totale
+    tableHTML += `
+        <tr style="background: #f8fafc; font-weight: 600;">
+            <td>Total</td>
+            <td>${total}</td>
+            <td>100%</td>
+            <td>-</td>
+        </tr>
+    `;
+    
+    tableBody.innerHTML = tableHTML;
+}
+
+// Helper function pour formater la date
+function formatDate(date) {
+    if (!date) return '';
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+// Rendu des projets avec pagination
+function renderProjects() {
+    const grid = document.getElementById('projectGrid');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageProjects = filteredProjects.slice(startIndex, endIndex);
+    
+    if (pageProjects.length === 0) {
+        grid.innerHTML = `
+            <div class="no-projects">
+                <p>Aucun projet ne correspond à votre recherche.</p>
+            </div>
+        `;
+    } else {
+        grid.innerHTML = pageProjects.map(project => `
+            <div class="project-card" 
+                 data-id="${project.id}"
+                 data-title="${project.title.toLowerCase()}"
+                 data-status="${project.status}"
+                 data-members="${project.members}">
+                <div class="card-badges">
+                    <span class="project-badge badge-tech">${project.category}</span>
+                    <span class="project-badge badge-status ${getStatusClass(project.status)}">
+                        ${project.status}
+                    </span>
+                </div>
+                <div class="project-info">
+                    <h2>${project.title}</h2>
+                    <p class="project-description">${project.description.substring(0, 120)}...</p>
+                    <div class="project-lead">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(project.lead)}&background=6366f1&color=fff" 
+                             class="lead-avatar" alt="${project.lead}">
+                        <span>Lead: ${project.lead}</span>
+                    </div>
+                </div>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-users"></i>
+                        <span>${project.members}/${project.max_members}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="far fa-calendar"></i>
+                        <span>Créé: ${project.created_at}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>${project.duration}</span>
+                    </div>
+                </div>
+                <div class="project-actions">
+                    <button class="btn-details" onclick="showDetails(${project.id})">
+                        <i class="fas fa-eye"></i> Détails
+                    </button>
+                    <button class="btn-join" ${project.status === 'Complet' ? 'disabled' : ''} 
+                            onclick="applyToProject(${project.id})">
+                        ${project.status === 'Complet' ? 'Complet' : 'Postuler'}
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    updatePagination();
+}
+
+// Pagination
+function updatePagination() {
+    const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+    const pageNumbers = document.getElementById('pageNumbers');
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+    
+    pageNumbers.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-number ${i === currentPage ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.addEventListener('click', () => {
+            currentPage = i;
+            renderProjects();
+        });
+        pageNumbers.appendChild(pageBtn);
+    }
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderProjects();
+    }
+}
+
+function nextPage() {
+    if (currentPage < Math.ceil(filteredProjects.length / itemsPerPage)) {
+        currentPage++;
+        renderProjects();
+    }
+}
+
+// Afficher détails d'un projet
+function showDetails(projectId) {
+    const project = projects.find(p => p.id == projectId);
+    if (!project) return;
+    
+    const detailsContent = `
+        <h2>${project.title}</h2>
+        <div class="card-badges" style="margin: 1rem 0;">
+            <span class="project-badge badge-tech">${project.category}</span>
+            <span class="project-badge badge-status ${getStatusClass(project.status)}">
+                ${project.status}
+            </span>
+        </div>
+        
+        <div style="margin: 1.5rem 0;">
+            <h3 style="color: #374151; margin-bottom: 0.5rem;">Description</h3>
+            <p style="color: #6b7280; line-height: 1.6;">${project.description}</p>
+        </div>
+        
+        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+            <h3 style="color: #374151; margin-bottom: 1rem;">Informations</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div>
+                    <div style="font-size: 0.9rem; color: #6b7280;">Chef de projet</div>
+                    <div style="font-weight: 600; color: #1f2937;">${project.lead}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; color: #6b7280;">Membres</div>
+                    <div style="font-weight: 600; color: #1f2937;">${project.members}/${project.max_members}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; color: #6b7280;">Date de création</div>
+                    <div style="font-weight: 600; color: #1f2937;">${project.created_at}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; color: #6b7280;">Durée</div>
+                    <div style="font-weight: 600; color: #1f2937;">${project.duration}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin: 1.5rem 0;">
+            <h3 style="color: #374151; margin-bottom: 0.5rem;">Technologies</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                ${project.technologies.map(tech => `
+                    <span style="background: #dbeafe; color: #1d4ed8; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.85rem;">
+                        ${tech}
+                    </span>
+                `).join('')}
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button class="btn-details" onclick="closeDetails()" style="flex: 1;">
+                <i class="fas fa-times"></i> Fermer
+            </button>
+            <button class="btn-join" ${project.status === 'Complet' ? 'disabled' : ''} 
+                    onclick="applyToProject(${project.id}); closeDetails();" style="flex: 2;">
+                ${project.status === 'Complet' ? 'Équipe complète' : 'Postuler maintenant'}
+            </button>
+        </div>
+    `;
+    
+    document.getElementById('detailsContent').innerHTML = detailsContent;
+    document.getElementById('detailsModal').classList.add('active');
+}
+
+function closeDetails() {
+    document.getElementById('detailsModal').classList.remove('active');
+}
+
+// Postuler à un projet
+function applyToProject(projectId) {
+    const project = projects.find(p => p.id == projectId);
+    if (!project || project.status === 'Complet') return;
+    
+    if (confirm(`Voulez-vous postuler au projet "${project.title}" ?`)) {
+        alert(`✅ Votre candidature pour "${project.title}" a été envoyée !\nLe chef de projet vous contactera bientôt.`);
+    }
+}
+
+// =============================================
+// FONCTION PDF RÉELLE
+// =============================================
+async function generatePDF() {
+    // Afficher le modal de chargement
+    const loadingModal = document.getElementById('pdfLoadingModal');
+    loadingModal.style.display = 'flex';
+    
+    try {
+        // Charger les bibliothèques dynamiquement si elles ne sont pas déjà chargées
+        await loadPDFLibraries();
+        
+        const { jsPDF } = window.jspdf;
+        
+        // Créer un nouveau document PDF
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+        
+        // Couleurs
+        const primaryColor = [99, 102, 241]; // #6366f1
+        const secondaryColor = [16, 185, 129]; // #10b981
+        const textColor = [31, 41, 55]; // #1f2937
+        const mutedColor = [107, 114, 128]; // #6b7280
+        
+        // En-tête
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, 210, 40, 'F');
+        
+        doc.setFontSize(24);
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.text('InnoLearn - Projets Collaboratifs', 105, 20, { align: 'center' });
+        
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255, 0.9);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Rapport généré le ' + new Date().toLocaleDateString('fr-FR'), 105, 30, { align: 'center' });
+        
+        let yPosition = 50;
+        
+        // Statistiques résumées
+        doc.setFontSize(16);
+        doc.setTextColor(...textColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Statistiques Générales', 20, yPosition);
+        
+        yPosition += 10;
+        
+        // Compter les projets par statut
+        const statusCounts = {};
+        const totalMembers = filteredProjects.reduce((sum, p) => sum + p.members, 0);
+        const totalSpots = filteredProjects.reduce((sum, p) => sum + p.max_members, 0);
+        const availableSpots = totalSpots - totalMembers;
+        
+        filteredProjects.forEach(project => {
+            statusCounts[project.status] = (statusCounts[project.status] || 0) + 1;
+        });
+        
+        // Tableau des statistiques
+        doc.setFontSize(10);
+        doc.setTextColor(...mutedColor);
+        doc.setFont('helvetica', 'normal');
+        
+        // Ligne 1
+        doc.text(`Total projets: ${filteredProjects.length}`, 20, yPosition);
+        doc.text(`Membres actifs: ${totalMembers}`, 90, yPosition);
+        doc.text(`Places disponibles: ${availableSpots}`, 160, yPosition);
+        
+        yPosition += 7;
+        
+        // Ligne 2
+        const fillRate = totalSpots > 0 ? Math.round((totalMembers / totalSpots) * 100) : 0;
+        doc.text(`Taux de remplissage: ${fillRate}%`, 20, yPosition);
+        
+        yPosition += 15;
+        
+        // Tableau des projets
+        doc.setFontSize(16);
+        doc.setTextColor(...textColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Liste des Projets', 20, yPosition);
+        
+        yPosition += 10;
+        
+        // En-tête du tableau
+        doc.setFillColor(243, 244, 246);
+        doc.rect(20, yPosition - 5, 170, 8, 'F');
+        
+        doc.setFontSize(10);
+        doc.setTextColor(...textColor);
+        doc.setFont('helvetica', 'bold');
+        
+        doc.text('Projet', 22, yPosition);
+        doc.text('Statut', 80, yPosition);
+        doc.text('Membres', 120, yPosition);
+        doc.text('Date création', 150, yPosition);
+        
+        yPosition += 10;
+        
+        // Lignes des projets
+        doc.setFontSize(9);
+        doc.setTextColor(...mutedColor);
+        doc.setFont('helvetica', 'normal');
+        
+        let projectCount = 0;
+        for (let i = 0; i < filteredProjects.length && projectCount < 20; i++) {
+            const project = filteredProjects[i];
+            
+            // Vérifier si on dépasse la page
+            if (yPosition > 270) {
+                doc.addPage();
+                yPosition = 20;
+                
+                // Nouvel en-tête de page
+                doc.setFillColor(...primaryColor);
+                doc.rect(0, 0, 210, 40, 'F');
+                doc.setFontSize(24);
+                doc.setTextColor(255, 255, 255);
+                doc.setFont('helvetica', 'bold');
+                doc.text('InnoLearn - Projets Collaboratifs', 105, 20, { align: 'center' });
+                doc.setFontSize(12);
+                doc.setTextColor(255, 255, 255, 0.9);
+                doc.text('Suite de la liste des projets', 105, 30, { align: 'center' });
+                yPosition = 50;
+            }
+            
+            // Couleur du statut
+            let statusColor = mutedColor;
+            if (project.status === 'Recherche membres') statusColor = [239, 68, 68];
+            else if (project.status === 'Complet') statusColor = [16, 185, 129];
+            else if (project.status === 'En cours') statusColor = [59, 130, 246];
+            
+            doc.setTextColor(...statusColor);
+            doc.setFont('helvetica', 'bold');
+            doc.text(project.status.substring(0, 15), 80, yPosition);
+            
+            doc.setTextColor(...textColor);
+            doc.setFont('helvetica', 'normal');
+            doc.text(project.title.substring(0, 30), 22, yPosition);
+            
+            doc.setTextColor(...mutedColor);
+            doc.text(`${project.members}/${project.max_members}`, 120, yPosition);
+            doc.text(project.created_at, 150, yPosition);
+            
+            yPosition += 7;
+            projectCount++;
+            
+            // Ligne séparatrice
+            if (i < filteredProjects.length - 1 && projectCount < 20) {
+                doc.setDrawColor(229, 231, 235);
+                doc.line(20, yPosition - 2, 190, yPosition - 2);
+                yPosition += 3;
+            }
+        }
+        
+        // Pied de page
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(8);
+            doc.setTextColor(...mutedColor);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Page ${i}/${pageCount}`, 105, 290, { align: 'center' });
+            doc.text('© InnoLearn ' + new Date().getFullYear(), 105, 295, { align: 'center' });
+        }
+        
+        // Sauvegarder le PDF
+        doc.save(`projets-innolearn-${new Date().toISOString().slice(0,10)}.pdf`);
+        
+        // Cacher le modal de chargement
+        loadingModal.style.display = 'none';
+        
+        // Message de succès
+        alert(`✅ PDF généré avec succès !\nLe fichier a été téléchargé.`);
+        
+    } catch (error) {
+        // Cacher le modal de chargement en cas d'erreur
+        loadingModal.style.display = 'none';
+        
+        console.error('Erreur lors de la génération du PDF:', error);
+        alert(`❌ Erreur lors de la génération du PDF:\n${error.message}\n\nAssurez-vous que les bibliothèques jsPDF sont chargées.`);
+    }
+}
+
+// Charger dynamiquement les bibliothèques PDF
+function loadPDFLibraries() {
+    return new Promise((resolve, reject) => {
+        // Vérifier si jsPDF est déjà chargé
+        if (window.jspdf) {
+            resolve();
+            return;
+        }
+        
+        // Charger jsPDF depuis CDN
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('Échec du chargement de jsPDF'));
+        document.head.appendChild(script);
+    });
+}
+
+// Helper function
+function getStatusClass(status) {
+    if (status === 'Recherche membres') return 'status-recherche';
+    if (status === 'Complet') return 'status-complet';
+    if (status === 'En cours') return 'status-encours';
+    return '';
+}
+</script>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock %}
